@@ -1,0 +1,319 @@
+{
+  "global": {
+    "color": {
+      "brand": {
+        "primary": {
+          "value": "#534AB7",
+          "type": "color",
+          "description": "Nav activo, numeración de pasos, botón Continuar"
+        },
+        "primary-light": {
+          "value": "#A5A2E4",
+          "type": "color",
+          "description": "Fondo botón 'No estoy seguro'"
+        },
+        "primary-soft": {
+          "value": "#EDEEF8",
+          "type": "color",
+          "description": "Hover de botón 'No estoy seguro'"
+        },
+        "primary-hover": {
+          "value": "#4139A7",
+          "type": "color",
+          "description": "Hover de botón Continuar"
+        },
+        "primary-glow": {
+          "value": "rgba(83,74,183,0.28)",
+          "type": "color",
+          "description": "Box-shadow de botón Continuar"
+        }
+      },
+      "sos": {
+        "accent": {
+          "value": "#E24B4A",
+          "type": "color",
+          "description": "Color principal SOS, borde botón SOS"
+        },
+        "bg": {
+          "value": "#FCEBEB",
+          "type": "color",
+          "description": "Fondo botón SOS"
+        },
+        "hover": {
+          "value": "#c93939",
+          "type": "color",
+          "description": "Hover botón SOS"
+        },
+        "remove": {
+          "value": "#c06080",
+          "type": "color",
+          "description": "Botón eliminar del kit SOS"
+        },
+        "remove-hover": {
+          "value": "#f5d5e5",
+          "type": "color",
+          "description": "Hover botón eliminar"
+        }
+      },
+      "save": {
+        "saved-bg": {
+          "value": "#fef6f9",
+          "type": "color",
+          "description": "Fondo botón Guardar (estado guardado)"
+        },
+        "saved-border": {
+          "value": "#e8b4cc",
+          "type": "color",
+          "description": "Borde botón Guardar (estado guardado)"
+        },
+        "saved-text": {
+          "value": "#7d3254",
+          "type": "color",
+          "description": "Texto botón Guardar (estado guardado)"
+        }
+      },
+      "text": {
+        "primary": {
+          "value": "#1a1a1a",
+          "type": "color",
+          "description": "Títulos, texto principal"
+        },
+        "secondary": {
+          "value": "#2a2a2a",
+          "type": "color",
+          "description": "Texto de pasos"
+        },
+        "tertiary": {
+          "value": "#444",
+          "type": "color",
+          "description": "Sección titles (Cómo aplicarla)"
+        },
+        "muted-1": {
+          "value": "#666",
+          "type": "color",
+          "description": "Texto de botón guardar, intro identificar"
+        },
+        "muted-2": {
+          "value": "#888",
+          "type": "color",
+          "description": "Subtítulos, descripciones de estrategia"
+        },
+        "muted-3": {
+          "value": "#999",
+          "type": "color",
+          "description": "Labels de sección, texto vacío SOS"
+        },
+        "muted-4": {
+          "value": "#aaa",
+          "type": "color",
+          "description": "Nav inactivo, labels explorar, familia emocional"
+        }
+      },
+      "surface": {
+        "app-bg": {
+          "value": "#f9f8f6",
+          "type": "color",
+          "description": "Fondo general de la app"
+        },
+        "body-bg": {
+          "value": "#dddbd7",
+          "type": "color",
+          "description": "Fondo del body (detrás del app shell)"
+        },
+        "effect-bg": {
+          "value": "#FEFDF5",
+          "type": "color",
+          "description": "Fondo del bloque 'Para qué sirve'"
+        },
+        "step-num": {
+          "value": "#f0eef8",
+          "type": "color",
+          "description": "Fondo de numeración de pasos"
+        },
+        "effect-border": {
+          "value": "#E8D96A",
+          "type": "color",
+          "description": "Borde del bloque 'Para qué sirve'"
+        }
+      },
+      "border": {
+        "default": {
+          "value": "#e2dfd9",
+          "type": "color",
+          "description": "Borde de cards, bottom nav, chips"
+        },
+        "medium": {
+          "value": "#c8c4bc",
+          "type": "color",
+          "description": "Hover de cards (cat, strategy, SOS)"
+        },
+        "light": {
+          "value": "#d8d5cf",
+          "type": "color",
+          "description": "Borde de btn back, save btn"
+        },
+        "xlight": {
+          "value": "#dddbd7",
+          "type": "color",
+          "description": "Borde explorar handle"
+        }
+      },
+      "overlay": {
+        "dark": {
+          "value": "rgba(0,0,0,0.38)",
+          "type": "color",
+          "description": "Overlay del bottom sheet Explorar"
+        },
+        "light": {
+          "value": "rgba(0,0,0,0.08)",
+          "type": "color",
+          "description": "Fondo de hero-badge"
+        },
+        "mid": {
+          "value": "rgba(0,0,0,0.18)",
+          "type": "color",
+          "description": "Box-shadow del app shell"
+        }
+      },
+      "emotion": {
+        "ira": {
+          "value": "#B03030",
+          "type": "color",
+          "description": "Color principal familia Ira"
+        },
+        "ira-bg": {
+          "value": "#FFF0F0",
+          "type": "color",
+          "description": "Fondo chips familia Ira"
+        },
+        "miedo": {
+          "value": "#4A43AA",
+          "type": "color",
+          "description": "Color principal familia Miedo"
+        },
+        "miedo-bg": {
+          "value": "#EDECFA",
+          "type": "color",
+          "description": "Fondo chips familia Miedo"
+        },
+        "asco": {
+          "value": "#276749",
+          "type": "color",
+          "description": "Color principal familia Asco"
+        },
+        "asco-bg": {
+          "value": "#F0FFF4",
+          "type": "color",
+          "description": "Fondo chips familia Asco"
+        },
+        "tristeza": {
+          "value": "#2563EB",
+          "type": "color",
+          "description": "Color principal familia Tristeza"
+        },
+        "tristeza-bg": {
+          "value": "#EEF3FF",
+          "type": "color",
+          "description": "Fondo chips familia Tristeza"
+        },
+        "felicidad": {
+          "value": "#92600A",
+          "type": "color",
+          "description": "Color principal familia Felicidad"
+        },
+        "felicidad-bg": {
+          "value": "#FFFDE7",
+          "type": "color",
+          "description": "Fondo chips familia Felicidad"
+        },
+        "sorpresa": {
+          "value": "#0E7490",
+          "type": "color",
+          "description": "Color principal familia Sorpresa"
+        },
+        "sorpresa-bg": {
+          "value": "#E0F7FA",
+          "type": "color",
+          "description": "Fondo chips familia Sorpresa"
+        }
+      },
+      "category": {
+        "fisiologica-icon-bg": {
+          "value": "#FFF9C4",
+          "type": "color",
+          "description": "Fondo ícono Fisiológica"
+        },
+        "fisiologica-title": {
+          "value": "#412402",
+          "type": "color",
+          "description": "Título Fisiológica / Reflexiva"
+        },
+        "fisiologica-sub": {
+          "value": "#854F0B",
+          "type": "color",
+          "description": "Subtítulo Fisiológica / Reflexiva"
+        },
+        "cognitiva-icon-bg": {
+          "value": "#E8EAF6",
+          "type": "color",
+          "description": "Fondo ícono Cognitiva"
+        },
+        "cognitiva-title": {
+          "value": "#26215C",
+          "type": "color",
+          "description": "Título Cognitiva"
+        },
+        "expresivo-icon-bg": {
+          "value": "#E1F5EE",
+          "type": "color",
+          "description": "Fondo ícono Expresivo"
+        },
+        "expresivo-title": {
+          "value": "#04342C",
+          "type": "color",
+          "description": "Título Expresivo"
+        },
+        "expresivo-sub": {
+          "value": "#0F6E56",
+          "type": "color",
+          "description": "Subtítulo Expresivo"
+        },
+        "vincular-icon-bg": {
+          "value": "#FBEAF0",
+          "type": "color",
+          "description": "Fondo ícono Vincular"
+        },
+        "vincular-title": {
+          "value": "#4B1528",
+          "type": "color",
+          "description": "Título Vincular"
+        },
+        "vincular-sub": {
+          "value": "#993556",
+          "type": "color",
+          "description": "Subtítulo Vincular"
+        },
+        "reflexiva-icon-bg": {
+          "value": "#FFF3E0",
+          "type": "color",
+          "description": "Fondo ícono Reflexiva"
+        },
+        "activa-icon-bg": {
+          "value": "#E3F2FD",
+          "type": "color",
+          "description": "Fondo ícono Activa"
+        },
+        "activa-title": {
+          "value": "#042C53",
+          "type": "color",
+          "description": "Título Activa"
+        },
+        "activa-sub": {
+          "value": "#185FA5",
+          "type": "color",
+          "description": "Subtítulo Activa"
+        }
+      }
+    }
+  }
+}
