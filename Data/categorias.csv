@@ -1,0 +1,8 @@
+Tabla 1
+ID_Categoría;Nombre;Objetivo principal;Útil para;Color
+CAT01;Fisiológica;Bajar activación;Ansiedad, enojo, pánico, estrés agudo;F9A825
+CAT02;Cognitiva;Clarificar pensamientos;Pensamientos catastróficos, autoexigencia, bucles mentales;5C6BC0
+CAT03;Expresivo;Dar salida a la emoción;Emociones bloqueadas, tristeza profunda, rabia contenida;43A047
+CAT04;Vincular;Buscar conexión;Soledad, sensación de rechazo, apego inseguro;E91E63
+CAT05;Reflexiva;Comprender y resignificar;Procesos de duelo, sentido, crisis existenciales;FB8C00
+CAT06;Activa;Reactivar energía y motivación;Apatía, desánimo, estados depresivos;1E88E5

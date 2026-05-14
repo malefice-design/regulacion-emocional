@@ -1,0 +1,74 @@
+Tabla 1
+ID_Emoción;Familia emocional (nivel 1);Emoción (nivel 2);Sentimiento (nivel 3);Categorías sugeridas
+EMO01;Ira;Herido;Devastado;Fisiológica, Expresivo
+EMO02;Ira;Herido;Apenado;Fisiológica, Expresivo
+EMO03;Ira;Amenazado;Celoso;Fisiológica, Expresivo
+;Ira;Amenazado;Atacado;Fisiológica, Expresivo
+;Ira;Lleno de odio;Ultrajado;Fisiológica, Expresivo
+;Ira;Lleno de odio;Resentido;Fisiológica, Expresivo
+;Ira;Loco;Rabioso;Fisiológica, Expresivo
+;Ira;Loco;Furioso;Fisiológica, Expresivo
+;Ira;Agresivo;Provocador;Fisiológica, Expresivo
+;Ira;Agresivo;Hostil;Fisiológica, Expresivo
+;Ira;Frustrado;Enfurecido;Fisiológica, Expresivo
+;Ira;Frustrado;Irritado;Fisiológica, Expresivo
+;Ira;Distante;Introvertido;Fisiológica, Expresivo
+;Ira;Distante;Desconfiado;Fisiológica, Expresivo
+;Ira;Crítico;Escéptico;Fisiológica, Expresivo
+;Ira;Crítico;Sarcástico;Fisiológica, Expresivo
+;Miedo;Humillado;Ridiculizado;Fisiológica, Cognitiva, Vincular
+;Miedo;Humillado;Irrespetado;Fisiológica, Cognitiva, Vincular
+;Miedo;Rechazado;Alienado;Fisiológica, Cognitiva, Vincular
+;Miedo;Rechazado;Marginado;Fisiológica, Cognitiva, Vincular
+;Miedo;Sumiso;Insignificante;Fisiológica, Cognitiva, Vincular
+;Miedo;Sumiso;Inútil;Fisiológica, Cognitiva, Vincular
+;Miedo;Inseguro;Inferior;Fisiológica, Cognitiva, Vincular
+;Miedo;Inseguro;Insuficiente;Fisiológica, Cognitiva, Vincular
+;Miedo;Ansioso;Preocupado;Fisiológica, Cognitiva, Vincular
+;Miedo;Ansioso;Agobiado;Fisiológica, Cognitiva, Vincular
+;Miedo;Asustado;Espantado;Fisiológica, Cognitiva, Vincular
+;Miedo;Asustado;Aterrado;Fisiológica, Cognitiva, Vincular
+;Asco;Disconforme;Moralista;Reflexiva, Expresivo, Cognitiva
+;Asco;Disconforme;Reacio;Reflexiva, Expresivo, Cognitiva
+;Asco;Decepcionado;Repugnante;Reflexiva, Expresivo, Cognitiva
+;Asco;Decepcionado;Revoltoso;Reflexiva, Expresivo, Cognitiva
+;Asco;Horrible;Asco;Reflexiva, Expresivo, Cognitiva
+;Asco;Horrible;Odioso;Reflexiva, Expresivo, Cognitiva
+;Asco;Abstinencia;Aversión;Reflexiva, Expresivo, Cognitiva
+;Asco;Abstinencia;Vacilante;Reflexiva, Expresivo, Cognitiva
+;Tristeza;Culpable;Arrepentido;Expresivo, Vincular, Reflexiva
+;Tristeza;Culpable;Avergonzado;Expresivo, Vincular, Reflexiva
+;Tristeza;Abandonado;Ignorado;Expresivo, Vincular, Reflexiva
+;Tristeza;Abandonado;Victimizado;Expresivo, Vincular, Reflexiva
+;Tristeza;Desesperado;Desvalido;Expresivo, Vincular, Reflexiva
+;Tristeza;Desesperado;Vulnerable;Expresivo, Vincular, Reflexiva
+;Tristeza;Deprimido;Melancólico;Expresivo, Vincular, Reflexiva
+;Tristeza;Deprimido;Vacío;Expresivo, Vincular, Reflexiva
+;Tristeza;Solo;Desamparado;Expresivo, Vincular, Reflexiva
+;Tristeza;Solo;Aislado;Expresivo, Vincular, Reflexiva
+;Tristeza;Aburrido;Apático;Expresivo, Vincular, Reflexiva
+;Tristeza;Aburrido;Inficerente;Expresivo, Vincular, Reflexiva
+;Felicidad;Optimista;Inspirado;Activa, Vincular, Reflexiva
+;Felicidad;Optimista;Abierto;Activa, Vincular, Reflexiva
+;Felicidad;Íntimo;Bromista;Activa, Vincular, Reflexiva
+;Felicidad;Íntimo;Sensible;Activa, Vincular, Reflexiva
+;Felicidad;Pacífico;Esperanzado;Activa, Vincular, Reflexiva
+;Felicidad;Pacífico;Cariñoso;Activa, Vincular, Reflexiva
+;Felicidad;Poderoso;Provocativo;Activa, Vincular, Reflexiva
+;Felicidad;Poderoso;Valiente;Activa, Vincular, Reflexiva
+;Felicidad;Aceptado;Satisfecho;Activa, Vincular, Reflexiva
+;Felicidad;Aceptado;Respetado;Activa, Vincular, Reflexiva
+;Felicidad;Orgulloso;Seguro;Activa, Vincular, Reflexiva
+;Felicidad;Orgulloso;Importante;Activa, Vincular, Reflexiva
+;Felicidad;Interesado;Curioso;Activa, Vincular, Reflexiva
+;Felicidad;Interesado;Entretenido;Activa, Vincular, Reflexiva
+;Felicidad;Alegre;Eufórico;Activa, Vincular, Reflexiva
+;Felicidad;Alegre;Liberado;Activa, Vincular, Reflexiva
+;Sorpresa;Sorprendido;Conmocionado;Cognitiva, Reflexiva, Expresivo
+;Sorpresa;Sorprendido;Abatido;Cognitiva, Reflexiva, Expresivo
+;Sorpresa;Confundido;Desilucionado;Cognitiva, Reflexiva, Expresivo
+;Sorpresa;Confundido;Perplejo;Cognitiva, Reflexiva, Expresivo
+;Sorpresa;Asombrado;Estupefacto;Cognitiva, Reflexiva, Expresivo
+;Sorpresa;Asombrado;Impresionado;Cognitiva, Reflexiva, Expresivo
+;Sorpresa;Entusiasmado;Entusiasta;Cognitiva, Reflexiva, Expresivo
+;Sorpresa;Entusiasmado;Enérgico;Cognitiva, Reflexiva, Expresivo

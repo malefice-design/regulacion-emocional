@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Regulación Emocional</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #dddbd7;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    #app {
+      width: 390px;
+      height: 100dvh;
+      position: relative;
+      overflow: hidden;
+      background: #f9f8f6;
+      box-shadow: 0 0 40px rgba(0,0,0,0.18);
+    }
+
+    /* ── Screens ── */
+    .screen {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      background: #f9f8f6;
+    }
+    .screen.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: all;
+    }
+    .screen-body {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    /* ── Status bar ── */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 22px 6px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      color: #1a1a1a;
+      flex-shrink: 0;
+    }
+    .status-icons { display: flex; gap: 5px; align-items: center; }
+
+    /* ── Top nav (list + detail) ── */
+    .top-nav {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 18px 8px;
+      flex-shrink: 0;
+    }
+    .btn-back {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 0.5px solid #d8d5cf;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: #1a1a1a;
+      flex-shrink: 0;
+      transition: transform 0.12s ease, border-color 0.12s ease;
+    }
+    .btn-back:hover { transform: scale(1.04); border-color: #bbb; }
+    .btn-back:active { transform: scale(0.95); }
+    .top-nav-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a1a;
+      letter-spacing: -0.3px;
+    }
+
+    /* ── Bottom nav ── */
+    .bottom-nav {
+      flex-shrink: 0;
+      background: white;
+      border-top: 0.5px solid #e2dfd9;
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 10px 0 18px;
+    }
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      cursor: pointer;
+      color: #aaa;
+      transition: color 0.12s ease;
+    }
+    .nav-item.active { color: #534AB7; }
+    .nav-item svg { display: block; }
+    .nav-label { font-size: 10px; font-weight: 500; }
+
+    /* ── Home: header ── */
+    .home-header { padding: 4px 22px 18px; }
+    .home-greeting { font-size: 13px; color: #888; margin-bottom: 4px; }
+    .home-question {
+      font-size: 20px;
+      font-weight: 500;
+      color: #1a1a1a;
+      letter-spacing: -0.4px;
+      line-height: 1.25;
+    }
+
+    /* ── Category buttons ── */
+    .categories { padding: 0 16px; display: flex; flex-direction: column; gap: 10px; }
+    .cat-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: white;
+      border: 0.5px solid #e2dfd9;
+      border-radius: 16px;
+      padding: 14px 16px;
+      cursor: pointer;
+      text-align: left;
+      transition: transform 0.12s ease, border-color 0.12s ease;
+    }
+    .cat-btn:hover { transform: scale(1.01); border-color: #c8c4bc; }
+    .cat-btn:active { transform: scale(0.98); }
+    .cat-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .cat-text { flex: 1; min-width: 0; }
+    .cat-title { font-size: 14px; font-weight: 600; letter-spacing: -0.2px; }
+    .cat-subtitle { font-size: 12px; margin-top: 2px; line-height: 1.3; }
+    .cat-arrow { font-size: 18px; color: #bbb; flex-shrink: 0; }
+
+    /* ── SOS button (home) ── */
+    .sos-wrap { padding: 14px 16px 20px; }
+    .sos-btn {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+      background: #FCEBEB;
+      border: 0.5px solid #E24B4A;
+      border-radius: 14px;
+      padding: 13px 16px;
+      cursor: pointer;
+      text-align: left;
+      transition: transform 0.12s ease, border-color 0.12s ease;
+    }
+    .sos-btn:hover { transform: scale(1.01); border-color: #c93939; }
+    .sos-btn:active { transform: scale(0.98); }
+    .sos-text { font-size: 14px; font-weight: 600; color: #A32D2D; letter-spacing: -0.2px; }
+    .sos-sub { font-size: 11px; color: #C45050; margin-top: 1px; }
+
+    /* ── Hero card (list + detail) ── */
+    .hero-card {
+      margin: 8px 16px 16px;
+      border-radius: 16px;
+      padding: 20px;
+      border: 0.5px solid transparent;
+    }
+    .hero-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      opacity: 0.7;
+    }
+    .hero-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+    .hero-sub { font-size: 13px; line-height: 1.4; opacity: 0.75; }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 12px;
+      background: rgba(0,0,0,0.08);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    /* ── Section label ── */
+    .section-label {
+      padding: 0 18px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: #999;
+    }
+
+    /* ── Strategy list items ── */
+    .strategy-list { padding: 0 16px; display: flex; flex-direction: column; gap: 8px; }
+    .strategy-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      border: 0.5px solid #e2dfd9;
+      border-radius: 14px;
+      padding: 13px 14px;
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.12s ease;
+    }
+    .strategy-item:hover { transform: scale(1.01); border-color: #c8c4bc; }
+    .strategy-item:active { transform: scale(0.98); }
+    .strategy-icon-box {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .strategy-info { flex: 1; min-width: 0; }
+    .strategy-name { font-size: 14px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.2px; line-height: 1.3; }
+    .strategy-brief {
+      font-size: 12px;
+      color: #888;
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+    .strategy-arrow { font-size: 16px; color: #bbb; flex-shrink: 0; }
+    .strategy-list-footer { height: 12px; }
+
+    /* ── Detail screen ── */
+    .detail-section { padding: 0 16px 16px; }
+    .detail-section-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #444;
+      letter-spacing: -0.1px;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.8px;
+      color: #999;
+    }
+    .steps-list { display: flex; flex-direction: column; gap: 10px; }
+    .step-item {
+      display: flex;
+      gap: 12px;
+      background: white;
+      border: 0.5px solid #e2dfd9;
+      border-radius: 12px;
+      padding: 13px 14px;
+    }
+    .step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #f0eef8;
+      color: #534AB7;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .step-text { font-size: 13.5px; color: #2a2a2a; line-height: 1.5; }
+
+    /* Effect box */
+    .effect-box {
+      margin: 0 16px 16px;
+      background: #FEFDF5;
+      border: 0.5px solid #E8D96A;
+      border-radius: 14px;
+      padding: 14px 16px;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    .effect-icon { flex-shrink: 0; color: #B5960A; margin-top: 1px; }
+    .effect-content {}
+    .effect-label { font-size: 10px; font-weight: 700; letter-spacing: 0.7px; text-transform: uppercase; color: #B5960A; margin-bottom: 5px; }
+    .effect-text { font-size: 13px; color: #4a3a00; line-height: 1.5; }
+
+    /* Save SOS button */
+    .save-btn-wrap { padding: 0 16px 24px; }
+    .save-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border-radius: 14px;
+      padding: 14px 20px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+      border: 0.5px solid #d8d5cf;
+      background: white;
+      color: #666;
+    }
+    .save-btn:hover { transform: scale(1.01); border-color: #b8b4ac; }
+    .save-btn:active { transform: scale(0.98); }
+    .save-btn.saved {
+      background: #fef6f9;
+      border-color: #e8b4cc;
+      color: #7d3254;
+    }
+
+    /* ── SOS Kit screen ── */
+    .sos-kit-header {
+      padding: 4px 20px 16px;
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+    }
+    .sos-kit-title { font-size: 22px; font-weight: 700; color: #A32D2D; letter-spacing: -0.5px; }
+    .sos-kit-count { font-size: 13px; color: #888; padding-bottom: 2px; }
+    .sos-list { padding: 0 16px; display: flex; flex-direction: column; gap: 8px; }
+    .sos-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: white;
+      border: 0.5px solid #e2dfd9;
+      border-radius: 14px;
+      padding: 13px 14px;
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.12s ease;
+    }
+    .sos-item:hover { transform: scale(1.01); border-color: #c8c4bc; }
+    .sos-item:active { transform: scale(0.98); }
+    .sos-item-info { flex: 1; min-width: 0; }
+    .sos-item-name { font-size: 14px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.2px; }
+    .sos-item-brief {
+      font-size: 12px;
+      color: #888;
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+    .sos-item-cat {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 600;
+      border-radius: 6px;
+      padding: 2px 7px;
+      margin-top: 5px;
+      letter-spacing: 0.2px;
+    }
+    .sos-remove-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      border: none;
+      background: #fef6f9;
+      color: #c06080;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: transform 0.12s ease, background 0.12s ease;
+    }
+    .sos-remove-btn:hover { transform: scale(1.08); background: #f5d5e5; }
+    .sos-remove-btn:active { transform: scale(0.95); }
+    .sos-empty {
+      margin: 40px 20px;
+      text-align: center;
+      color: #999;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .sos-empty svg { margin: 0 auto 14px; display: block; opacity: 0.3; }
+    .sos-list-footer { height: 12px; }
+
+    /* ── Bottom nav (3 items) ── */
+    .bottom-nav { justify-content: space-around; }
+    .nav-item { min-width: 64px; }
+
+    /* ── Explorar bottom sheet ── */
+    .explorar-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.38);
+      z-index: 200;
+      display: flex;
+      align-items: flex-end;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.22s ease;
+    }
+    .explorar-overlay.open { opacity: 1; pointer-events: all; }
+    .explorar-sheet {
+      width: 100%;
+      background: #f9f8f6;
+      border-radius: 22px 22px 0 0;
+      padding: 6px 0 0;
+      transform: translateY(100%);
+      transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1);
+    }
+    .explorar-overlay.open .explorar-sheet { transform: translateY(0); }
+    .explorar-handle {
+      width: 36px; height: 4px;
+      background: #d8d5cf;
+      border-radius: 2px;
+      margin: 10px auto 18px;
+    }
+    .explorar-sheet-label {
+      padding: 0 18px 12px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      color: #aaa;
+    }
+    .explorar-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding: 0 16px 8px;
+    }
+    .explorar-cat-card {
+      background: white;
+      border: 0.5px solid #e2dfd9;
+      border-radius: 16px;
+      padding: 14px 14px 13px;
+      cursor: pointer;
+      transition: transform 0.12s ease, border-color 0.12s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+    }
+    .explorar-cat-card:hover { transform: scale(1.02); border-color: #c8c4bc; }
+    .explorar-cat-card:active { transform: scale(0.97); }
+    .explorar-cat-icon {
+      width: 36px; height: 36px;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .explorar-cat-title { font-size: 13px; font-weight: 600; line-height: 1.25; letter-spacing: -0.2px; }
+    .explorar-close {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 16px 0 22px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #534AB7;
+      cursor: pointer;
+      border-top: 0.5px solid #e2dfd9;
+      margin-top: 8px;
+      background: none;
+      border-left: none; border-right: none; border-bottom: none;
+    }
+
+    /* ── Identify button (home) ── */
+    .identify-wrap { padding: 14px 16px 12px; }
+    .identify-btn {
+      display: flex; align-items: center; gap: 12px; width: 100%;
+      background: #EDEEF8; border: 0.5px solid #A5A2E4; border-radius: 14px;
+      padding: 13px 16px; cursor: pointer; text-align: left;
+      transition: transform 0.12s ease, border-color 0.12s ease;
+    }
+    .identify-btn:hover { transform: scale(1.01); border-color: #7B77D4; }
+    .identify-btn:active { transform: scale(0.98); }
+    .identify-icon-box {
+      width: 36px; height: 36px; border-radius: 10px; background: #C5C3F0;
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .identify-btn-text { font-size: 14px; font-weight: 600; color: #3730A3; letter-spacing: -0.2px; }
+    .identify-btn-sub { font-size: 11px; color: #6B67C8; margin-top: 1px; }
+
+    /* ── Identify screen — emotion picker ── */
+    #screen-identify .screen-body { padding-bottom: 110px; }
+    .identify-intro { padding: 4px 18px 20px; font-size: 14px; color: #666; line-height: 1.5; }
+    .emotion-section { margin-bottom: 22px; }
+    .emotion-section-header { display: flex; align-items: center; gap: 8px; padding: 0 16px 10px; }
+    .emotion-familia-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .emotion-familia-name { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #aaa; }
+    .emotion-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px; }
+    .emotion-chip {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 7px 13px; border-radius: 20px; border: 1px solid;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      user-select: none; -webkit-user-select: none;
+    }
+    .emotion-chip:active { transform: scale(0.93); }
+    .emotion-chip-check { width: 13px; height: 13px; flex-shrink: 0; opacity: 0; transition: opacity 0.12s ease; }
+    .emotion-chip.selected .emotion-chip-check { opacity: 1; }
+    .emotion-chip.nivel-3 { font-size: 12px; padding: 5px 11px; font-weight: 400; opacity: 0.9; }
+    .emotion-group { margin-bottom: 10px; }
+    .emotion-sentimientos { padding-left: 20px; margin-top: 6px; }
+    .identify-float {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 24px 16px 32px;
+      background: linear-gradient(to bottom, transparent, #f9f8f6 40%);
+      pointer-events: none;
+    }
+    .identify-continue-btn {
+      width: 100%; display: flex; align-items: center; justify-content: center;
+      padding: 15px 20px; border-radius: 14px; border: none;
+      background: #534AB7; color: white;
+      font-size: 15px; font-weight: 600; letter-spacing: -0.2px;
+      cursor: pointer; pointer-events: all;
+      transition: transform 0.12s ease, background 0.15s ease;
+      box-shadow: 0 4px 18px rgba(83,74,183,0.28);
+    }
+    .identify-continue-btn:disabled { opacity: 0.38; pointer-events: none; box-shadow: none; }
+    .identify-continue-btn:not(:disabled):hover { background: #4139A7; transform: scale(1.01); }
+    .identify-continue-btn:not(:disabled):active { transform: scale(0.97); }
+
+    /* ── Suggest screen ── */
+    .suggest-hero { margin: 8px 16px 16px; border-radius: 16px; padding: 18px; }
+    .suggest-hero-label { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; opacity: 0.65; margin-bottom: 6px; }
+    .suggest-hero-title { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; line-height: 1.25; margin-bottom: 10px; }
+    .suggest-emotion-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+    .suggest-emotion-tag { display: inline-block; padding: 3px 9px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+    .suggest-section-label { padding: 0 18px 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #999; }
+    .suggest-cats { padding: 0 16px; display: flex; flex-direction: column; gap: 10px; }
+    .suggest-cat-card {
+      display: flex; align-items: center; gap: 14px; background: white;
+      border: 0.5px solid #e2dfd9; border-radius: 16px; padding: 14px 16px;
+      cursor: pointer; transition: transform 0.12s ease, border-color 0.12s ease;
+    }
+    .suggest-cat-card:hover { transform: scale(1.01); border-color: #c8c4bc; }
+    .suggest-cat-card:active { transform: scale(0.98); }
+    .suggest-cat-info { flex: 1; min-width: 0; }
+    .suggest-cat-title { font-size: 14px; font-weight: 600; letter-spacing: -0.2px; }
+    .suggest-cat-sub { font-size: 12px; margin-top: 2px; line-height: 1.3; opacity: 0.75; }
+    .suggest-match-bar-bg { height: 3px; background: #ebe8e2; border-radius: 2px; overflow: hidden; margin-top: 8px; }
+    .suggest-match-bar-fill { height: 100%; border-radius: 2px; }
+    .suggest-cats-footer { height: 20px; }
+
+    /* scrollbar */
+    .screen-body::-webkit-scrollbar { width: 0; }
+  </style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ════════════════════════════════════════
+       PANTALLA 1 — INICIO
+  ════════════════════════════════════════ -->
+  <div id="screen-home" class="screen active">
+    <div class="screen-body">
+      <!-- Status bar -->
+      <div class="status-bar">
+        <span>9:41</span>
+        <div class="status-icons">
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="currentColor">
+            <rect x="0" y="5" width="3" height="7" rx="0.8" opacity="0.4"/>
+            <rect x="4" y="3" width="3" height="9" rx="0.8" opacity="0.6"/>
+            <rect x="8" y="1" width="3" height="11" rx="0.8" opacity="0.8"/>
+            <rect x="12" y="0" width="3" height="12" rx="0.8"/>
+          </svg>
+          <svg width="16" height="12" viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M1.5 5.5C5.5 1.5 18.5 1.5 22.5 5.5"/>
+            <path d="M5 9C7.8 6.2 16.2 6.2 19 9"/>
+            <path d="M8.5 12.5C10.2 10.8 13.8 10.8 15.5 12.5"/>
+            <circle cx="12" cy="16" r="1.5" fill="currentColor"/>
+          </svg>
+          <svg width="25" height="12" viewBox="0 0 25 12" fill="none">
+            <rect x="0.5" y="0.5" width="21" height="11" rx="3.5" stroke="currentColor" stroke-opacity="0.35"/>
+            <rect x="2" y="2" width="17" height="8" rx="2" fill="currentColor"/>
+            <path d="M23 4v4a2 2 0 0 0 0-4Z" fill="currentColor" opacity="0.4"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Header -->
+      <div class="home-header">
+        <p class="home-greeting">Guía de regulación emocional</p>
+        <p class="home-question">¿Con qué necesitas<br>ayuda hoy?</p>
+      </div>
+
+      <!-- Categories -->
+      <div class="categories" id="home-cats"></div>
+
+      <!-- Identificar emoción -->
+      <div class="identify-wrap">
+        <button class="identify-btn" id="btn-identify">
+          <div class="identify-icon-box">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#534AB7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"/>
+              <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+              <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <div>
+            <div class="identify-btn-text">No estoy seguro</div>
+            <div class="identify-btn-sub">Ayúdame a identificarlo</div>
+          </div>
+        </button>
+      </div>
+
+      <!-- SOS button -->
+      <div class="sos-wrap">
+        <button class="sos-btn" id="btn-sos-home">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E24B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 10a6 6 0 0 1 12 0v3H6v-3z"/>
+            <rect x="4" y="13" width="16" height="3" rx="1.5"/>
+            <path d="M12 2V4"/>
+            <path d="M5.27 5.27L6.7 6.7"/>
+            <path d="M18.73 5.27L17.3 6.7"/>
+            <path d="M8 19h8"/>
+            <path d="M6 16v3"/><path d="M18 16v3"/>
+          </svg>
+          <div>
+            <div class="sos-text">Kit SOS — acceso rápido</div>
+            <div class="sos-sub">Tus estrategias guardadas</div>
+          </div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Bottom nav -->
+    <nav class="bottom-nav">
+      <div class="nav-item active" id="home-nav-inicio">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span class="nav-label">Inicio</span>
+      </div>
+      <div class="nav-item" id="home-nav-sos">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10a6 6 0 0 1 12 0v3H6v-3z"/><rect x="4" y="13" width="16" height="3" rx="1.5"/><path d="M12 2V4"/><path d="M5.27 5.27L6.7 6.7"/><path d="M18.73 5.27L17.3 6.7"/><path d="M8 19h8"/><path d="M6 16v3"/><path d="M18 16v3"/></svg>
+        <span class="nav-label">Kit SOS</span>
+      </div>
+      <div class="nav-item" id="home-nav-explorar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+        <span class="nav-label">Explorar</span>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       PANTALLA 2 — LISTA DE ESTRATEGIAS
+  ════════════════════════════════════════ -->
+  <div id="screen-list" class="screen">
+    <div class="top-nav">
+      <button class="btn-back" id="btn-back-list">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+      <span class="top-nav-title" id="list-nav-title"></span>
+    </div>
+    <div class="screen-body">
+      <div class="hero-card" id="list-hero"></div>
+      <div class="section-label">Elige una estrategia</div>
+      <div class="strategy-list" id="strategy-list"></div>
+      <div class="strategy-list-footer"></div>
+    </div>
+    <nav class="bottom-nav">
+      <div class="nav-item active" id="list-nav-inicio">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span class="nav-label">Inicio</span>
+      </div>
+      <div class="nav-item" id="list-nav-sos">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10a6 6 0 0 1 12 0v3H6v-3z"/><rect x="4" y="13" width="16" height="3" rx="1.5"/><path d="M12 2V4"/><path d="M5.27 5.27L6.7 6.7"/><path d="M18.73 5.27L17.3 6.7"/><path d="M8 19h8"/><path d="M6 16v3"/><path d="M18 16v3"/></svg>
+        <span class="nav-label">Kit SOS</span>
+      </div>
+      <div class="nav-item" id="list-nav-explorar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+        <span class="nav-label">Explorar</span>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       PANTALLA 3 — DETALLE DE ESTRATEGIA
+  ════════════════════════════════════════ -->
+  <div id="screen-detail" class="screen">
+    <div class="top-nav">
+      <button class="btn-back" id="btn-back-detail">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+      <span class="top-nav-title" id="detail-nav-title"></span>
+    </div>
+    <div class="screen-body">
+      <div class="hero-card" id="detail-hero"></div>
+      <div class="effect-box" id="detail-effect"></div>
+      <div class="detail-section">
+        <div class="detail-section-title">Cómo aplicarla</div>
+        <div class="steps-list" id="detail-steps"></div>
+      </div>
+      <div class="save-btn-wrap">
+        <button class="save-btn" id="save-btn">
+          <span id="save-btn-icon"></span>
+          <span id="save-btn-text"></span>
+        </button>
+      </div>
+    </div>
+    <nav class="bottom-nav">
+      <div class="nav-item active" id="detail-nav-inicio">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span class="nav-label">Inicio</span>
+      </div>
+      <div class="nav-item" id="detail-nav-sos">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10a6 6 0 0 1 12 0v3H6v-3z"/><rect x="4" y="13" width="16" height="3" rx="1.5"/><path d="M12 2V4"/><path d="M5.27 5.27L6.7 6.7"/><path d="M18.73 5.27L17.3 6.7"/><path d="M8 19h8"/><path d="M6 16v3"/><path d="M18 16v3"/></svg>
+        <span class="nav-label">Kit SOS</span>
+      </div>
+      <div class="nav-item" id="detail-nav-explorar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+        <span class="nav-label">Explorar</span>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       PANTALLA 4 — KIT SOS
+  ════════════════════════════════════════ -->
+  <div id="screen-sos" class="screen">
+    <div class="top-nav">
+      <button class="btn-back" id="btn-back-sos">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+      </button>
+    </div>
+    <div class="screen-body">
+      <div class="sos-kit-header">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E24B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 10a6 6 0 0 1 12 0v3H6v-3z"/>
+              <rect x="4" y="13" width="16" height="3" rx="1.5"/>
+              <path d="M12 2V4"/>
+              <path d="M5.27 5.27L6.7 6.7"/>
+              <path d="M18.73 5.27L17.3 6.7"/>
+              <path d="M8 19h8"/>
+              <path d="M6 16v3"/><path d="M18 16v3"/>
+            </svg>
+            <span class="sos-kit-title">Kit SOS</span>
+          </div>
+          <div style="font-size:13px;color:#888;margin-top:2px;" id="sos-subtitle">Tus estrategias guardadas</div>
+        </div>
+      </div>
+      <div class="sos-list" id="sos-list"></div>
+      <div class="sos-list-footer"></div>
+    </div>
+    <nav class="bottom-nav">
+      <div class="nav-item" id="sos-nav-inicio">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span class="nav-label">Inicio</span>
+      </div>
+      <div class="nav-item active" id="sos-nav-sos">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10a6 6 0 0 1 12 0v3H6v-3z"/><rect x="4" y="13" width="16" height="3" rx="1.5"/><path d="M12 2V4"/><path d="M5.27 5.27L6.7 6.7"/><path d="M18.73 5.27L17.3 6.7"/><path d="M8 19h8"/><path d="M6 16v3"/><path d="M18 16v3"/></svg>
+        <span class="nav-label">Kit SOS</span>
+      </div>
+      <div class="nav-item" id="sos-nav-explorar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+        <span class="nav-label">Explorar</span>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       PANTALLA 5 — IDENTIFICAR EMOCIÓN
+  ════════════════════════════════════════ -->
+  <div id="screen-identify" class="screen">
+    <div class="top-nav">
+      <button class="btn-back" id="btn-back-identify">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="top-nav-title">¿Qué emoción sientes?</span>
+    </div>
+    <div class="screen-body">
+      <p class="identify-intro">Selecciona todo lo que reconoces en ti ahora mismo. Puedes elegir varias.</p>
+      <div id="emotion-sections"></div>
+    </div>
+    <div class="identify-float">
+      <button class="identify-continue-btn" id="identify-continue" disabled>Continuar</button>
+    </div>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       PANTALLA 6 — SUGERENCIAS
+  ════════════════════════════════════════ -->
+  <div id="screen-suggest" class="screen">
+    <div class="top-nav">
+      <button class="btn-back" id="btn-back-suggest">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span class="top-nav-title">Para ti</span>
+    </div>
+    <div class="screen-body">
+      <div class="suggest-hero" id="suggest-hero"></div>
+      <div class="suggest-section-label">Técnicas sugeridas</div>
+      <div class="suggest-cats" id="suggest-cats"></div>
+      <div class="suggest-cats-footer"></div>
+    </div>
+    <nav class="bottom-nav">
+      <div class="nav-item active" id="suggest-nav-inicio">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span class="nav-label">Inicio</span>
+      </div>
+      <div class="nav-item" id="suggest-nav-sos">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10a6 6 0 0 1 12 0v3H6v-3z"/><rect x="4" y="13" width="16" height="3" rx="1.5"/><path d="M12 2V4"/><path d="M5.27 5.27L6.7 6.7"/><path d="M18.73 5.27L17.3 6.7"/><path d="M8 19h8"/><path d="M6 16v3"/><path d="M18 16v3"/></svg>
+        <span class="nav-label">Kit SOS</span>
+      </div>
+      <div class="nav-item" id="suggest-nav-explorar">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
+        <span class="nav-label">Explorar</span>
+      </div>
+    </nav>
+  </div>
+
+  <!-- ════════════════════════════════════════
+       MENÚ EXPLORAR — bottom sheet
+  ════════════════════════════════════════ -->
+  <div id="explorar-overlay" class="explorar-overlay">
+    <div id="explorar-sheet" class="explorar-sheet">
+      <div class="explorar-handle"></div>
+      <div class="explorar-sheet-label">Categorías</div>
+      <div class="explorar-grid" id="explorar-grid"></div>
+      <button class="explorar-close" id="explorar-close">Cerrar</button>
+    </div>
+  </div>
+
+</div><!-- #app -->
+
+<script>
+// ══════════════════════════════════════════════
+//  DATOS DE CATEGORÍAS (embebidos)
+// ══════════════════════════════════════════════
+const CATS = {
+  'Fisiológica': {
+    title:        'Bajar la activación',
+    subtitle:     'Ansiedad, enojo, pánico, estrés',
+    iconBg:       '#FFF9C4',
+    titleColor:   '#412402',
+    subColor:     '#854F0B',
+    icon:         'wind',
+    frase:        'Calma tu cuerpo primero',
+    heroDesc:     'Técnicas corporales para regular el sistema nervioso',
+  },
+  'Cognitiva': {
+    title:        'Clarificar mis pensamientos',
+    subtitle:     'Bucles mentales, autoexigencia, pensamientos catastróficos',
+    iconBg:       '#E8EAF6',
+    titleColor:   '#26215C',
+    subColor:     '#534AB7',
+    icon:         'brain',
+    frase:        'Dale claridad a tu mente',
+    heroDesc:     'Herramientas para ordenar y cuestionar tus pensamientos',
+  },
+  'Expresivo': {
+    title:        'Dar salida a lo que siento',
+    subtitle:     'Emociones bloqueadas, tristeza, rabia contenida',
+    iconBg:       '#E1F5EE',
+    titleColor:   '#04342C',
+    subColor:     '#0F6E56',
+    icon:         'bubble',
+    frase:        'Dale voz a lo que sientes',
+    heroDesc:     'Formas de expresar y liberar lo que llevas dentro',
+  },
+  'Vincular': {
+    title:        'Buscar conexión',
+    subtitle:     'Soledad, sensación de rechazo, apego inseguro',
+    iconBg:       '#FBEAF0',
+    titleColor:   '#4B1528',
+    subColor:     '#993556',
+    icon:         'heart',
+    frase:        'Reconecta con los demás',
+    heroDesc:     'Formas de reducir el aislamiento y sentir pertenencia',
+  },
+  'Reflexiva': {
+    title:        'Comprender y resignificar',
+    subtitle:     'Procesos de duelo, sentido, crisis existenciales',
+    iconBg:       '#FFF3E0',
+    titleColor:   '#412402',
+    subColor:     '#854F0B',
+    icon:         'notebook',
+    frase:        'Comprende lo que te pasa',
+    heroDesc:     'Herramientas para dar sentido a lo que vives',
+  },
+  'Activa': {
+    title:        'Reactivar energía',
+    subtitle:     'Apatía, desánimo, estados depresivos',
+    iconBg:       '#E3F2FD',
+    titleColor:   '#042C53',
+    subColor:     '#185FA5',
+    icon:         'lightning',
+    frase:        'Despierta tu energía',
+    heroDesc:     'Actividades para recuperar el movimiento y la vitalidad',
+  },
+};
+
+const CAT_ORDER = ['Fisiológica','Cognitiva','Expresivo','Vincular','Reflexiva','Activa'];
+
+// ══════════════════════════════════════════════
+//  FAMILIAS Y EMOCIONES (nivel 2, desde emociones.csv)
+// ══════════════════════════════════════════════
+const FAMILIAS = {
+  'Ira':       { bg: '#FFF0F0', color: '#B03030' },
+  'Miedo':     { bg: '#EDECFA', color: '#4A43AA' },
+  'Asco':      { bg: '#F0FFF4', color: '#276749' },
+  'Tristeza':  { bg: '#EEF3FF', color: '#2563EB' },
+  'Felicidad': { bg: '#FFFDE7', color: '#92600A' },
+  'Sorpresa':  { bg: '#E0F7FA', color: '#0E7490' },
+};
+const FAMILIA_ORDER = ['Ira','Miedo','Asco','Tristeza','Felicidad','Sorpresa'];
+
+const EMOCIONES = [
+  // ─── IRA ──────────────────────────────────────
+  { familia:'Ira', nivel:2, key:'Herido',        parent:null,            cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:3, key:'Devastado',      parent:'Herido',        cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:3, key:'Apenado',        parent:'Herido',        cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:2, key:'Amenazado',      parent:null,            cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:3, key:'Celoso',         parent:'Amenazado',     cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:3, key:'Atacado',        parent:'Amenazado',     cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:2, key:'Lleno de odio',  parent:null,            cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:3, key:'Ultrajado',      parent:'Lleno de odio', cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:3, key:'Resentido',      parent:'Lleno de odio', cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:2, key:'Loco',           parent:null,            cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:3, key:'Rabioso',        parent:'Loco',          cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:3, key:'Furioso',        parent:'Loco',          cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:2, key:'Agresivo',       parent:null,            cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:3, key:'Provocador',     parent:'Agresivo',      cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:3, key:'Hostil',         parent:'Agresivo',      cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:2, key:'Frustrado',      parent:null,            cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:3, key:'Enfurecido',     parent:'Frustrado',     cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:3, key:'Irritado',       parent:'Frustrado',     cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:2, key:'Distante',       parent:null,            cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:3, key:'Introvertido',   parent:'Distante',      cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:3, key:'Desconfiado',    parent:'Distante',      cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:2, key:'Crítico',        parent:null,            cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:3, key:'Escéptico',      parent:'Crítico',       cats:['Fisiológica','Expresivo'] },
+  { familia:'Ira', nivel:3, key:'Sarcástico',     parent:'Crítico',       cats:['Fisiológica','Expresivo'] },
+  // ─── MIEDO ────────────────────────────────────
+  { familia:'Miedo', nivel:2, key:'Humillado',     parent:null,           cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:3, key:'Ridiculizado',  parent:'Humillado',    cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:3, key:'Irrespetado',   parent:'Humillado',    cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:2, key:'Rechazado',     parent:null,           cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:3, key:'Alienado',      parent:'Rechazado',    cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:3, key:'Marginado',     parent:'Rechazado',    cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:2, key:'Sumiso',        parent:null,           cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:3, key:'Insignificante',parent:'Sumiso',       cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:3, key:'Inútil',        parent:'Sumiso',       cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:2, key:'Inseguro',      parent:null,           cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:3, key:'Inferior',      parent:'Inseguro',     cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:3, key:'Insuficiente',  parent:'Inseguro',     cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:2, key:'Ansioso',       parent:null,           cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:3, key:'Preocupado',    parent:'Ansioso',      cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:3, key:'Agobiado',      parent:'Ansioso',      cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:2, key:'Asustado',      parent:null,           cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:3, key:'Espantado',     parent:'Asustado',     cats:['Fisiológica','Cognitiva','Vincular'] },
+  { familia:'Miedo', nivel:3, key:'Aterrado',      parent:'Asustado',     cats:['Fisiológica','Cognitiva','Vincular'] },
+  // ─── ASCO ─────────────────────────────────────
+  { familia:'Asco', nivel:2, key:'Disconforme',    parent:null,           cats:['Reflexiva','Expresivo','Cognitiva'] },
+  { familia:'Asco', nivel:3, key:'Moralista',      parent:'Disconforme',  cats:['Reflexiva','Expresivo','Cognitiva'] },
+  { familia:'Asco', nivel:3, key:'Reacio',         parent:'Disconforme',  cats:['Reflexiva','Expresivo','Cognitiva'] },
+  { familia:'Asco', nivel:2, key:'Decepcionado',   parent:null,           cats:['Reflexiva','Expresivo','Cognitiva'] },
+  { familia:'Asco', nivel:3, key:'Repugnante',     parent:'Decepcionado', cats:['Reflexiva','Expresivo','Cognitiva'] },
+  { familia:'Asco', nivel:3, key:'Revoltoso',      parent:'Decepcionado', cats:['Reflexiva','Expresivo','Cognitiva'] },
+  { familia:'Asco', nivel:2, key:'Horrible',       parent:null,           cats:['Reflexiva','Expresivo','Cognitiva'] },
+  { familia:'Asco', nivel:3, key:'Asqueroso',      parent:'Horrible',     cats:['Reflexiva','Expresivo','Cognitiva'] },
+  { familia:'Asco', nivel:3, key:'Odioso',         parent:'Horrible',     cats:['Reflexiva','Expresivo','Cognitiva'] },
+  { familia:'Asco', nivel:2, key:'Abstinencia',    parent:null,           cats:['Reflexiva','Expresivo','Cognitiva'] },
+  { familia:'Asco', nivel:3, key:'Aversión',       parent:'Abstinencia',  cats:['Reflexiva','Expresivo','Cognitiva'] },
+  { familia:'Asco', nivel:3, key:'Vacilante',      parent:'Abstinencia',  cats:['Reflexiva','Expresivo','Cognitiva'] },
+  // ─── TRISTEZA ─────────────────────────────────
+  { familia:'Tristeza', nivel:2, key:'Culpable',    parent:null,          cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:3, key:'Arrepentido', parent:'Culpable',    cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:3, key:'Avergonzado', parent:'Culpable',    cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:2, key:'Abandonado',  parent:null,          cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:3, key:'Ignorado',    parent:'Abandonado',  cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:3, key:'Victimizado', parent:'Abandonado',  cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:2, key:'Desesperado', parent:null,          cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:3, key:'Desvalido',   parent:'Desesperado', cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:3, key:'Vulnerable',  parent:'Desesperado', cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:2, key:'Deprimido',   parent:null,          cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:3, key:'Melancólico', parent:'Deprimido',   cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:3, key:'Vacío',       parent:'Deprimido',   cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:2, key:'Solo',        parent:null,          cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:3, key:'Desamparado', parent:'Solo',        cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:3, key:'Aislado',     parent:'Solo',        cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:2, key:'Aburrido',    parent:null,          cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:3, key:'Apático',     parent:'Aburrido',    cats:['Expresivo','Vincular','Reflexiva'] },
+  { familia:'Tristeza', nivel:3, key:'Indiferente', parent:'Aburrido',    cats:['Expresivo','Vincular','Reflexiva'] },
+  // ─── FELICIDAD ────────────────────────────────
+  { familia:'Felicidad', nivel:2, key:'Optimista',   parent:null,          cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:3, key:'Inspirado',   parent:'Optimista',   cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:3, key:'Abierto',     parent:'Optimista',   cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:2, key:'Íntimo',      parent:null,          cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:3, key:'Bromista',    parent:'Íntimo',      cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:3, key:'Sensible',    parent:'Íntimo',      cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:2, key:'Pacífico',    parent:null,          cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:3, key:'Esperanzado', parent:'Pacífico',    cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:3, key:'Cariñoso',    parent:'Pacífico',    cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:2, key:'Poderoso',    parent:null,          cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:3, key:'Provocativo', parent:'Poderoso',    cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:3, key:'Valiente',    parent:'Poderoso',    cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:2, key:'Aceptado',    parent:null,          cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:3, key:'Satisfecho',  parent:'Aceptado',    cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:3, key:'Respetado',   parent:'Aceptado',    cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:2, key:'Orgulloso',   parent:null,          cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:3, key:'Seguro',      parent:'Orgulloso',   cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:3, key:'Importante',  parent:'Orgulloso',   cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:2, key:'Interesado',  parent:null,          cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:3, key:'Curioso',     parent:'Interesado',  cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:3, key:'Entretenido', parent:'Interesado',  cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:2, key:'Alegre',      parent:null,          cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:3, key:'Eufórico',    parent:'Alegre',      cats:['Activa','Vincular','Reflexiva'] },
+  { familia:'Felicidad', nivel:3, key:'Liberado',    parent:'Alegre',      cats:['Activa','Vincular','Reflexiva'] },
+  // ─── SORPRESA ─────────────────────────────────
+  { familia:'Sorpresa', nivel:2, key:'Sorprendido',   parent:null,           cats:['Cognitiva','Reflexiva','Expresivo'] },
+  { familia:'Sorpresa', nivel:3, key:'Conmocionado',  parent:'Sorprendido',  cats:['Cognitiva','Reflexiva','Expresivo'] },
+  { familia:'Sorpresa', nivel:3, key:'Abatido',       parent:'Sorprendido',  cats:['Cognitiva','Reflexiva','Expresivo'] },
+  { familia:'Sorpresa', nivel:2, key:'Confundido',    parent:null,           cats:['Cognitiva','Reflexiva','Expresivo'] },
+  { familia:'Sorpresa', nivel:3, key:'Desilusionado', parent:'Confundido',   cats:['Cognitiva','Reflexiva','Expresivo'] },
+  { familia:'Sorpresa', nivel:3, key:'Perplejo',      parent:'Confundido',   cats:['Cognitiva','Reflexiva','Expresivo'] },
+  { familia:'Sorpresa', nivel:2, key:'Asombrado',     parent:null,           cats:['Cognitiva','Reflexiva','Expresivo'] },
+  { familia:'Sorpresa', nivel:3, key:'Estupefacto',   parent:'Asombrado',    cats:['Cognitiva','Reflexiva','Expresivo'] },
+  { familia:'Sorpresa', nivel:3, key:'Impresionado',  parent:'Asombrado',    cats:['Cognitiva','Reflexiva','Expresivo'] },
+  { familia:'Sorpresa', nivel:2, key:'Entusiasmado',  parent:null,           cats:['Cognitiva','Reflexiva','Expresivo'] },
+  { familia:'Sorpresa', nivel:3, key:'Entusiasta',    parent:'Entusiasmado', cats:['Cognitiva','Reflexiva','Expresivo'] },
+  { familia:'Sorpresa', nivel:3, key:'Enérgico',      parent:'Entusiasmado', cats:['Cognitiva','Reflexiva','Expresivo'] },
+];
+
+// ══════════════════════════════════════════════
+//  ICONOS SVG
+// ══════════════════════════════════════════════
+const ICONS = {
+  wind: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9.59 4.59A2 2 0 1 1 11 8H2"/>
+    <path d="M10.59 19.41A2 2 0 1 0 14 16H2"/>
+    <path d="M15.73 7.27A2.5 2.5 0 1 1 19.5 12H2"/>
+  </svg>`,
+  brain: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/>
+    <path d="M12 5a3 3 0 1 1 5.997.125 4 4 0 0 1 2.526 5.77 4 4 0 0 1-.556 6.588A4 4 0 1 1 12 18Z"/>
+    <path d="M15 13a4.5 4.5 0 0 1-3-4 4.5 4.5 0 0 1-3 4"/>
+    <path d="M17.599 6.5a3 3 0 0 0 .399-1.375"/>
+    <path d="M6.003 5.125A3 3 0 0 0 6.401 6.5"/>
+    <path d="M3.477 10.896a4 4 0 0 1 .585-.396"/>
+    <path d="M19.938 10.5a4 4 0 0 1 .585.396"/>
+    <path d="M6 18a4 4 0 0 1-1.967-.516"/>
+    <path d="M19.967 17.484A4 4 0 0 1 18 18"/>
+  </svg>`,
+  bubble: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+  </svg>`,
+  heart: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+  </svg>`,
+  notebook: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+    <line x1="9" y1="7" x2="15" y2="7"/>
+    <line x1="9" y1="11" x2="15" y2="11"/>
+  </svg>`,
+  lightning: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+  </svg>`,
+  clock: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <polyline points="12 6 12 12 16 14"/>
+  </svg>`,
+  sparkles: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+    <path d="M20 3v4"/>
+    <path d="M22 5h-4"/>
+    <path d="M4 17v2"/>
+    <path d="M5 18H3"/>
+  </svg>`,
+  heartOutline: `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+  </svg>`,
+  heartFilled: `<svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+  </svg>`,
+  home: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+    <polyline points="9 22 9 12 15 12 15 22"/>
+  </svg>`,
+};
+
+// ══════════════════════════════════════════════
+//  DATOS EMBEBIDOS (desde estrategias.csv)
+// ══════════════════════════════════════════════
+const ESTRATEGIAS = [
+  { 'ID_Estrategia': 'EST01', 'ID_Categoría': 'CAT01', 'Categoría': 'Fisiológica', 'Nombre estrategia': 'Respiración en caja (4-4-4-4)', 'Descripción': 'Siéntate con la espalda recta y los pies apoyados en el suelo. Inhala lentamente por la nariz durante 4 tiempos, sintiendo cómo el abdomen se expande. Retén el aire sin tensión durante 4 tiempos. Exhala lentamente por la boca durante 4 tiempos, vaciando los pulmones por completo. Mantén los pulmones vacíos durante 4 tiempos antes de volver a inhalar. Repite el ciclo completo al menos 3 veces y observa cómo se ralentiza tu ritmo cardíaco.', 'Efecto / para qué sirve': 'Calma la mente y regula el ritmo cardíaco. Equilibra el sistema nervioso autónomo en minutos.', 'Duración aprox.': '5-10 min', 'Tags': 'respiración, ansiedad, pánico, estrés, enojo' },
+  { 'ID_Estrategia': 'EST02', 'ID_Categoría': 'CAT01', 'Categoría': 'Fisiológica', 'Nombre estrategia': 'Movimiento lento y consciente', 'Descripción': 'Encuentra un lugar cómodo donde puedas sentarte o recostarte sin interrupciones. Comienza a mecerte suavemente hacia adelante y hacia atrás, siguiendo un ritmo lento y regular. Si prefieres, cruza los brazos sobre el pecho y date un abrazo propio apretando suavemente. Puedes también aplicar presión firme con ambas manos sobre el esternón durante 30 segundos. Continúa el movimiento o la presión hasta notar que tu cuerpo empieza a relajarse. Cierra con tres respiraciones lentas y profundas.', 'Efecto / para qué sirve': 'Brinda sensación de seguridad y contención desde el cuerpo, calmando el sistema nervioso de manera inmediata.', 'Duración aprox.': '5-15 min', 'Tags': 'cuerpo, contención, ansiedad, enojo' },
+  { 'ID_Estrategia': 'EST03', 'ID_Categoría': 'CAT01', 'Categoría': 'Fisiológica', 'Nombre estrategia': 'Anclaje sensorial agradable', 'Descripción': 'Elige un estímulo sensorial que sea agradable o neutro para ti en este momento. Toca un objeto con textura interesante como una manta suave, una piedra lisa o agua fría, y enfoca toda tu atención en la sensación. Ahora identifica un olor que te resulte agradable: aceites esenciales, café, una fruta. Permite que ese aroma ocupe tu atención completamente durante 20 segundos. Busca un sonido tranquilizador: lluvia, música suave o el silencio mismo. Permanece con estos estímulos sensoriales hasta sentir que el sistema nervioso se ha calmado.', 'Efecto / para qué sirve': 'Ayuda a conectar con el presente y salir del estado de alerta a través de los sentidos.', 'Duración aprox.': '5-10 min', 'Tags': 'grounding, presente, ansiedad, pánico' },
+  { 'ID_Estrategia': 'EST04', 'ID_Categoría': 'CAT01', 'Categoría': 'Fisiológica', 'Nombre estrategia': 'Grounding 5-4-3-2-1', 'Descripción': 'Detente donde estás y toma una respiración lenta antes de comenzar. Mira a tu alrededor y nombra en voz alta 5 cosas que puedas ver claramente ahora mismo. Toca 4 objetos distintos y describe brevemente cómo se siente cada uno al tacto. Escucha con atención y detecta 3 sonidos diferentes presentes en este momento. Percibe 2 olores a tu alrededor, acercando tu manga o algo cercano si es necesario. Finalmente, identifica 1 sabor en tu boca y observa cómo la atención en tus sentidos te ha traído de regreso al presente.', 'Efecto / para qué sirve': 'Reduce la disociación y el desbordamiento emocional anclando la atención al aquí y ahora.', 'Duración aprox.': '5-10 min', 'Tags': 'grounding, ansiedad, disociación, pánico' },
+  { 'ID_Estrategia': 'EST05', 'ID_Categoría': 'CAT01', 'Categoría': 'Fisiológica', 'Nombre estrategia': 'Técnica de calor y frío', 'Descripción': 'Decide si en este momento necesitas calmar la activación, en cuyo caso usa frío, o reconfortar el cuerpo, en cuyo caso usa calor. Para frío: moja tu rostro con agua helada o sostén un cubito de hielo en la mano durante 30 segundos. Para calor: aplica una compresa tibia en el cuello o el pecho y deja que el calor se distribuya. Observa cómo el cambio de temperatura modifica tu estado interno de forma inmediata. Repite la aplicación si es necesario hasta notar que la intensidad emocional ha bajado. Cierra con tres respiraciones profundas.', 'Efecto / para qué sirve': 'Estimula el nervio vago y modifica el estado fisiológico de forma inmediata, especialmente útil en picos de enojo o pánico.', 'Duración aprox.': '2-5 min', 'Tags': 'cuerpo, activación, enojo, pánico' },
+  { 'ID_Estrategia': 'EST06', 'ID_Categoría': 'CAT02', 'Categoría': 'Cognitiva', 'Nombre estrategia': 'Reestructuración cognitiva', 'Descripción': 'Escribe en un papel el pensamiento automático que más te está afectando en este momento, sin editarlo. Pregúntate: ¿Cuál es la evidencia real que apoya este pensamiento? ¿Y cuál la contradice? Evalúa si estás cayendo en algún sesgo cognitivo como catastrofismo, lectura mental o pensamiento todo-o-nada. Genera al menos dos interpretaciones alternativas posibles de la misma situación. Escribe un pensamiento más realista y equilibrado basado en toda la evidencia disponible. Lee el nuevo pensamiento en voz alta y nota si la intensidad emocional cambia.', 'Efecto / para qué sirve': 'Reduce la intensidad emocional al cambiar la interpretación de lo que ocurre, cuestionando sesgos cognitivos automáticos.', 'Duración aprox.': '15-30 min', 'Tags': 'pensamientos, autoexigencia, ansiedad, tristeza' },
+  { 'ID_Estrategia': 'EST07', 'ID_Categoría': 'CAT02', 'Categoría': 'Cognitiva', 'Nombre estrategia': 'Perspectiva del observador', 'Descripción': 'Identifica el pensamiento crítico o la situación difícil que te está generando malestar. Imagina que un amigo muy querido te describe exactamente la misma situación sobre sí mismo. Escribe o piensa cómo le responderías a ese amigo con genuina gentileza y realismo. Señala con suavidad lo que sería más justo y compasivo decirle. Aplica ahora esa misma respuesta hacia ti mismo, leyéndola en primera persona. Observa cómo cambia la sensación cuando te hablas como le hablarías a alguien que profundamente aprecias.', 'Efecto / para qué sirve': 'Fomenta la autocompasión y el distanciamiento de la autocrítica al adoptar la perspectiva que usaríamos con alguien querido.', 'Duración aprox.': '10-15 min', 'Tags': 'autocompasión, autocrítica, tristeza' },
+  { 'ID_Estrategia': 'EST08', 'ID_Categoría': 'CAT02', 'Categoría': 'Cognitiva', 'Nombre estrategia': 'Técnica STOP', 'Descripción': 'En el momento en que notes un pensamiento rumativo o ansioso, dite internamente STOP con firmeza. Haz una pausa completa: detén lo que estás haciendo durante unos segundos. Toma tres respiraciones lentas y profundas antes de continuar con cualquier cosa. Observa el pensamiento desde afuera, como si lo vieras en una pantalla, sin fusionarte con él. Pregúntate: ¿Qué está pasando realmente ahora mismo? ¿Este pensamiento me ayuda o me perjudica? Redirige la atención hacia una actividad concreta o hacia la respiración consciente.', 'Efecto / para qué sirve': 'Interrumpe ciclos mentales dañinos en tiempo real creando un espacio entre el pensamiento y la reacción.', 'Duración aprox.': '2-5 min', 'Tags': 'rumiación, ansiedad, bucles mentales' },
+  { 'ID_Estrategia': 'EST09', 'ID_Categoría': 'CAT02', 'Categoría': 'Cognitiva', 'Nombre estrategia': 'Separar emoción de realidad', 'Descripción': 'Reconoce la emoción que estás sintiendo y nómbrala con la mayor precisión posible. Recuérdate que sentir miedo, tristeza o angustia no significa que algo malo esté ocurriendo ahora mismo. Dibuja dos columnas: qué dice mi emoción versus qué dicen los hechos reales y verificables. Identifica con honestidad la diferencia entre lo que sientes y lo que realmente está sucediendo en el exterior. Practica en voz alta la frase: Siento X y eso es válido, pero la realidad observable es Y. Respira profundo y observa si puedes separar un poco la intensidad emocional de los hechos concretos.', 'Efecto / para qué sirve': 'Permite observar la emoción sin dejarse arrastrar por ella, separando el estado interno de la realidad externa.', 'Duración aprox.': '10-20 min', 'Tags': 'ansiedad, miedo, pensamiento catastrófico' },
+  { 'ID_Estrategia': 'EST10', 'ID_Categoría': 'CAT02', 'Categoría': 'Cognitiva', 'Nombre estrategia': 'Autodiálogo compasivo', 'Descripción': 'Identifica la frase autocrítica que más te repites cuando estás pasando un momento difícil. Escríbela exactamente como suena en tu mente, sin suavizarla ni editarla. Ahora pregúntate: ¿Le hablaría así a alguien que quiero y que está sufriendo? Reescribe esa misma idea con un tono amable, comprensivo y realista, como si se la dijeras a un amigo. Lee la nueva frase en voz alta y observa qué cambia en tu cuerpo y en tu estado de ánimo. Practica usar ese nuevo tono contigo mismo cada vez que notes que la autocrítica aparece.', 'Efecto / para qué sirve': 'Fortalece la relación contigo mismo y promueve la autorregulación emocional reduciendo la autocrítica excesiva.', 'Duración aprox.': '5-15 min', 'Tags': 'autocompasión, autocrítica, autoexigencia' },
+  { 'ID_Estrategia': 'EST11', 'ID_Categoría': 'CAT03', 'Categoría': 'Expresivo', 'Nombre estrategia': 'Escritura libre o carta no enviada', 'Descripción': 'Busca un lugar privado y tranquilo y toma papel o abre una nota digital. Si eliges escritura libre, escribe sin parar durante 15 a 20 minutos sobre lo que estás sintiendo, sin censurarte ni editar. Si eliges una carta no enviada, escríbela a la persona o situación con quien tienes emociones pendientes con total honestidad. Incluye lo que sientes, lo que necesitas y lo que nunca has podido decir en voz alta. No te preocupes por la gramática ni la coherencia: solo deja que fluya sin filtros. Al terminar, decide si guardas lo escrito o lo destruyes, ambas opciones son igualmente válidas y liberadoras.', 'Efecto / para qué sirve': 'Libera emociones contenidas y aclara lo que pasa internamente, reduciendo la rumiación y el peso emocional.', 'Duración aprox.': '15-30 min', 'Tags': 'escritura, tristeza, rabia, emociones bloqueadas' },
+  { 'ID_Estrategia': 'EST12', 'ID_Categoría': 'CAT03', 'Categoría': 'Expresivo', 'Nombre estrategia': 'Mapa corporal de emociones', 'Descripción': 'Dibuja una silueta simple del cuerpo humano en una hoja de papel en blanco. Cierra los ojos unos segundos y escanea tu cuerpo de cabeza a pies con atención plena. Identifica las zonas donde sientes tensión, peso, presión, vacío o cualquier sensación intensa ahora mismo. Marca esas zonas en el dibujo con colores que representen las distintas sensaciones o emociones. Escribe al lado de cada marca qué emoción crees que habita en esa parte del cuerpo. Observa el dibujo completo y reflexiona sobre qué te dice sobre tu estado emocional actual.', 'Efecto / para qué sirve': 'Conecta la experiencia emocional con lo corporal, facilitando la expresión de lo que es difícil verbalizar.', 'Duración aprox.': '15-20 min', 'Tags': 'cuerpo, expresión, tristeza, rabia' },
+  { 'ID_Estrategia': 'EST13', 'ID_Categoría': 'CAT03', 'Categoría': 'Expresivo', 'Nombre estrategia': 'Danza y movimiento libre', 'Descripción': 'Encuentra un espacio privado donde puedas moverte con libertad sin ser observado ni juzgado. Pon música que corresponda con tu estado emocional: algo melancólico si estás triste, intenso si estás enojado. Cierra los ojos y comienza a mover tu cuerpo siguiendo lo que él pida, sin planificar ni juzgar los movimientos. Deja que el movimiento se vuelva más amplio y expresivo con el tiempo, permitiendo exagerarlo. Permite que la emoción se mueva a través del cuerpo en lugar de quedarse estancada. Termina con movimientos más lentos y suaves, como si te despidieras de lo que liberaste.', 'Efecto / para qué sirve': 'Libera tensiones, desbloquea emociones y mejora la conexión mente-cuerpo a través del movimiento espontáneo.', 'Duración aprox.': '10-20 min', 'Tags': 'cuerpo, movimiento, tristeza, rabia, bloqueo' },
+  { 'ID_Estrategia': 'EST14', 'ID_Categoría': 'CAT03', 'Categoría': 'Expresivo', 'Nombre estrategia': 'Expresión plástica fluida', 'Descripción': 'Prepara materiales suaves y fluidos: acuarelas, témperas muy diluidas, o simplemente agua con colorante. Elige colores que representen cómo te sientes ahora mismo, sin pensar demasiado en la elección. Aplica el color sobre el papel dejando que fluya libremente, sin intentar crear nada específico ni bonito. Si tienes una pajilla, sopla suavemente sobre la pintura húmeda y observa cómo se expande. Deja que el proceso sea el fin: no busques un resultado concreto, solo expresión pura. Observa lo que creaste con curiosidad, como si fuera la obra de otra persona, y nota lo que sientes.', 'Efecto / para qué sirve': 'Estimula el juego y la creatividad como forma de descarga emocional sin necesidad de palabras.', 'Duración aprox.': '20-30 min', 'Tags': 'creatividad, expresión, tristeza, bloqueo' },
+  { 'ID_Estrategia': 'EST15', 'ID_Categoría': 'CAT03', 'Categoría': 'Expresivo', 'Nombre estrategia': 'Escultura emocional', 'Descripción': 'Consigue plastilina, barro, arcilla, o simplemente papel para arrugar y manipular. Cierra los ojos y conecta con la emoción que estás sintiendo ahora mismo, sin intentar cambiarla. Comienza a moldear o manipular el material dejando que tus manos expresen esa emoción sin un plan previo. Puede ser una bola de rabia, un nudo que representa tristeza, algo con agujeros para el vacío. Date tiempo suficiente para trabajar el material, cambiándolo cuantas veces quieras. Cuando termines, observa lo que creaste y decide si quieres destruirlo, guardarlo o transformarlo en algo nuevo.', 'Efecto / para qué sirve': 'Le da forma visible a lo invisible y permite transformar lo que pesa internamente a través de las manos.', 'Duración aprox.': '15-25 min', 'Tags': 'creatividad, expresión, rabia, tristeza, vacío' },
+  { 'ID_Estrategia': 'EST16', 'ID_Categoría': 'CAT04', 'Categoría': 'Vincular', 'Nombre estrategia': 'Hablar con alguien de confianza', 'Descripción': 'Identifica a una persona en tu vida con quien te sientas seguro, aceptado y escuchado sin condiciones. Envíale un mensaje o llámala sin necesidad de preparar un discurso ni explicar todo de antemano. Comienza simplemente compartiendo cómo estás en este momento con las palabras que tengas disponibles. Permite que la conversación fluya sin presionarte a resolverlo todo ni a llegar a una conclusión. Solo recibir presencia y escucha genuina ya tiene un efecto regulador profundo en el sistema nervioso. Cuando termines, agradece al otro por su tiempo y a ti mismo por haber dado ese paso.', 'Efecto / para qué sirve': 'Sentirse escuchado y comprendido calma el sistema nervioso y refuerza el sentido de pertenencia y vínculo afectivo.', 'Duración aprox.': 'Variable', 'Tags': 'conexión, soledad, apego, apoyo' },
+  { 'ID_Estrategia': 'EST17', 'ID_Categoría': 'CAT04', 'Categoría': 'Vincular', 'Nombre estrategia': 'Evocar una figura de apego', 'Descripción': 'Cierra los ojos y toma tres respiraciones lentas y profundas para llegar al presente. Trae a tu mente a alguien que en algún momento de tu vida te haya hecho sentir seguro, querido o cuidado. Puede ser una persona real, un personaje, un animal, un ser imaginario o incluso un lugar especial. Visualiza su presencia con detalle: su rostro, su voz, la sensación de estar cerca de esa figura. Imagina que te transmite calidez, seguridad y calma en este momento específico. Permítete recibir ese cuidado interno durante varios minutos, sintiéndolo en tu cuerpo.', 'Efecto / para qué sirve': 'Refuerza la sensación interna de seguridad cuando no hay acceso inmediato al vínculo en el presente.', 'Duración aprox.': '5-10 min', 'Tags': 'apego, soledad, seguridad, recurso interno' },
+  { 'ID_Estrategia': 'EST18', 'ID_Categoría': 'CAT04', 'Categoría': 'Vincular', 'Nombre estrategia': 'Visualización del lugar seguro', 'Descripción': 'Siéntate o recuéstate cómodamente y cierra los ojos. Imagina un lugar real o inventado donde te sientas completamente a salvo, en paz y sin amenazas. Agrega detalles a esa imagen: ¿Cómo es la luz? ¿Qué sonidos hay? ¿Cómo está el aire, la temperatura, el suelo bajo tus pies? Explora ese lugar con calma, moviéndote libremente por él en tu imaginación sin prisa. Cada vez que inhales, imagina que ese lugar te recibe con más calidez y protección. Permanece allí tanto tiempo como necesites y regresa a él mentalmente cuando necesites refugiarte.', 'Efecto / para qué sirve': 'Disminuye la activación emocional y brinda una sensación de refugio y seguridad internos accesibles en cualquier momento.', 'Duración aprox.': '10-15 min', 'Tags': 'visualización, ansiedad, soledad, seguridad' },
+  { 'ID_Estrategia': 'EST19', 'ID_Categoría': 'CAT04', 'Categoría': 'Vincular', 'Nombre estrategia': 'Abrazo de mariposa (EMDR)', 'Descripción': 'Siéntate cómodamente con la espalda apoyada en el respaldo y los pies bien plantados en el suelo. Cruza los brazos sobre el pecho colocando cada mano sobre el hombro o brazo contrario. Comienza a dar palmaditas suaves y alternadas: primero el lado izquierdo, luego el derecho, de manera rítmica. Mantén un ritmo lento y constante mientras respiras profundo y sin forzar. Continúa durante 30 a 60 segundos con los ojos cerrados o semi-abiertos. Detente, toma una respiración profunda y observa cómo se siente tu cuerpo antes de repetir si es necesario.', 'Efecto / para qué sirve': 'Estimula bilateralmente el cerebro promoviendo la autorregulación emocional y la sensación de contención propia.', 'Duración aprox.': '5-10 min', 'Tags': 'EMDR, autorregulación, ansiedad, trauma' },
+  { 'ID_Estrategia': 'EST20', 'ID_Categoría': 'CAT04', 'Categoría': 'Vincular', 'Nombre estrategia': 'El espejo emocional', 'Descripción': 'Cierra los ojos y respira profundamente para conectar con el momento presente. Imagina vívidamente a la persona que más te quiere en el mundo mirándote ahora mismo en este momento difícil. ¿Qué notaría en tu rostro, tu postura, tu mirada? ¿Qué le generaría verte así? Imagina que esa persona te habla con toda la ternura y comprensión que genuinamente tiene hacia ti. ¿Qué palabras exactas te diría? ¿Cómo tomaría tus manos o te abrazaría? Deja que esas palabras imaginadas lleguen a tu cuerpo como si fueran reales y observa qué cambia.', 'Efecto / para qué sirve': 'Fomenta una mirada compasiva hacia uno mismo a través de la perspectiva del vínculo afectivo real.', 'Duración aprox.': '10-15 min', 'Tags': 'autocompasión, soledad, apego, autocrítica' },
+  { 'ID_Estrategia': 'EST21', 'ID_Categoría': 'CAT04', 'Categoría': 'Vincular', 'Nombre estrategia': 'Álbum de apoyo emocional', 'Descripción': 'Reúne fotos, mensajes, notas o cualquier recuerdo que evoque momentos en que te sentiste querido o acompañado. Organízalos en un álbum físico, una carpeta digital o una nota especial que puedas abrir cuando lo necesites. Para cada elemento, escribe una frase corta sobre lo que ese momento significó para ti. Incluye también frases que alguien te haya dicho y que te hayan reconfortado profundamente. Vuelve a este álbum en momentos de soledad o dolor como forma de reconectar con el amor que has recibido. Actualízalo cada vez que encuentres un nuevo recuerdo que valga la pena conservar.', 'Efecto / para qué sirve': 'Activa la memoria emocional positiva y funciona como recurso de consuelo para reconectar con el amor recibido.', 'Duración aprox.': 'Variable', 'Tags': 'memoria, consuelo, soledad, apego' },
+  { 'ID_Estrategia': 'EST22', 'ID_Categoría': 'CAT05', 'Categoría': 'Reflexiva', 'Nombre estrategia': 'Registro emocional completo', 'Descripción': 'Toma papel o una nota digital y escribe la fecha y la hora del registro. Nombra la emoción que estás sintiendo ahora con la mayor precisión que puedas, evitando palabras genéricas. Escribe el pensamiento principal que acompaña a esa emoción en este momento concreto. Escanea tu cuerpo y describe dónde y cómo se manifiesta físicamente esa emoción ahora mismo. Reflexiona brevemente sobre qué situación o evento desencadenó este estado emocional hoy. Cierra el registro con una frase sobre qué necesita esa emoción de tu parte ahora mismo.', 'Efecto / para qué sirve': 'Ayuda a tomar conciencia del estado emocional completo y a entender su impacto en el cuerpo, la mente y la conducta.', 'Duración aprox.': '10-15 min', 'Tags': 'autoconocimiento, duelo, crisis existencial, registro' },
+  { 'ID_Estrategia': 'EST23', 'ID_Categoría': 'CAT05', 'Categoría': 'Reflexiva', 'Nombre estrategia': 'Mapa de la situación (modelo cognitivo)', 'Descripción': 'Escribe en el centro de una hoja la situación o evento concreto que ocurrió recientemente. En un primer nivel, anota el pensamiento automático que surgió ante esa situación sin editarlo. En un segundo nivel, identifica la emoción que ese pensamiento generó y valora su intensidad del 1 al 10. En un tercer nivel, observa qué conducta o impulso surgió a raíz de esa emoción. Busca el patrón: ¿esta cadena situación-pensamiento-emoción-conducta se repite en tu vida? Identifica en qué eslabón de la cadena podrías intervenir de manera diferente para obtener un resultado distinto.', 'Efecto / para qué sirve': 'Facilita el análisis de cómo las interpretaciones influyen en lo que sentimos y hacemos, identificando puntos de cambio posibles.', 'Duración aprox.': '20-30 min', 'Tags': 'patrones, autoconocimiento, duelo, TCC' },
+  { 'ID_Estrategia': 'EST24', 'ID_Categoría': 'CAT05', 'Categoría': 'Reflexiva', 'Nombre estrategia': 'Reescritura narrativa', 'Descripción': 'Escribe en unas pocas líneas la historia de la situación difícil desde tu perspectiva actual, tal como la vives hoy. Lee lo que escribiste y observa el tono predominante: ¿hay victimización, culpa, desesperanza o ausencia de agencia? Reescribe la misma historia cambiando el rol del protagonista: de víctima a sobreviviente, o de fracasado a aprendiz activo. En esta segunda versión incorpora lo que has aprendido o lo que esta experiencia podría estar enseñándote. Escribe una tercera versión desde la perspectiva de alguien que te admira y ve todo lo que has enfrentado. Lee las tres versiones y elige la que más te dé sensación de agencia y posibilidad.', 'Efecto / para qué sirve': 'Permite resignificar lo vivido transformando el dolor en parte de una historia de crecimiento personal.', 'Duración aprox.': '20-40 min', 'Tags': 'resignificación, duelo, trauma, crisis existencial' },
+  { 'ID_Estrategia': 'EST25', 'ID_Categoría': 'CAT05', 'Categoría': 'Reflexiva', 'Nombre estrategia': 'Diálogo con la emoción', 'Descripción': 'Cierra los ojos y conecta con la emoción que estás sintiendo ahora mismo, sin intentar cambiarla ni suprimirla. Imagina que esa emoción tiene una forma, un color, un tamaño y una voz propia. En tu mente o en papel, pregúntale: ¿Por qué estás aquí? ¿Qué vienes a decirme? ¿Qué necesito saber? Escribe o imagina la respuesta que esa emoción te daría si pudiera hablar con total honestidad. Continúa el diálogo hasta que sientas que la emoción ha sido escuchada y genuinamente reconocida. Agradece a la emoción por su mensaje antes de cerrar el ejercicio.', 'Efecto / para qué sirve': 'Fomenta una relación más consciente y empática con el mundo emocional propio, convirtiendo las emociones en aliadas.', 'Duración aprox.': '15-20 min', 'Tags': 'autoconocimiento, emoción, duelo, sentido' },
+  { 'ID_Estrategia': 'EST26', 'ID_Categoría': 'CAT05', 'Categoría': 'Reflexiva', 'Nombre estrategia': 'Diario de decisiones significativas', 'Descripción': 'Elige una decisión importante que hayas tomado en el pasado, sin que necesariamente haya sido la correcta. Escribe el contexto de esa decisión: ¿Qué estaba pasando en tu vida? ¿Qué opciones tenías disponibles en ese momento? Describe el proceso interno: ¿Qué te movió a elegir lo que elegiste? ¿Qué valores o necesidades guiaron esa decisión? Reflexiona sobre el resultado: ¿Qué aprendiste de esa experiencia independientemente de si salió como esperabas? Escribe qué dice sobre ti como persona el hecho de haber tomado esa decisión con los recursos que tenías entonces.', 'Efecto / para qué sirve': 'Reafirma la agencia personal y permite valorar el propio camino desde el sentido y la autocompasión histórica.', 'Duración aprox.': '20-30 min', 'Tags': 'sentido, agencia, autoconocimiento, crisis existencial' },
+  { 'ID_Estrategia': 'EST27', 'ID_Categoría': 'CAT06', 'Categoría': 'Activa', 'Nombre estrategia': 'Activación conductual', 'Descripción': 'Haz una lista de cinco actividades pequeñas que antes disfrutabas y que has dejado de hacer últimamente. Elige la más sencilla y alcanzable con los recursos que tienes hoy, sin importar si tienes ganas en este momento. Comprométete a hacerla durante al menos 10 minutos, sin juzgar el resultado ni cómo te sientes mientras la realizas. Cuando termines, anota en qué porcentaje cambió tu estado de ánimo comparado con antes de empezar. Repite mañana eligiendo otra actividad de la lista, independientemente del resultado de hoy. Recuerda: la motivación llega después de la acción, no antes.', 'Efecto / para qué sirve': 'Rompe el ciclo de inactividad-tristeza y reactiva el circuito de recompensa de forma progresiva y sostenida.', 'Duración aprox.': '15-60 min', 'Tags': 'depresión, apatía, desánimo, motivación' },
+  { 'ID_Estrategia': 'EST28', 'ID_Categoría': 'CAT06', 'Categoría': 'Activa', 'Nombre estrategia': 'Registro de logros diarios', 'Descripción': 'Al final de cada día, abre una nota o cuaderno dedicado exclusivamente a este ejercicio. Escribe al menos tres cosas que hiciste hoy, por pequeñas o simples que parezcan a primera vista. Para cada una, escribe por qué cuenta como un logro dado tu contexto y nivel de energía actuales. Añade una frase de reconocimiento genuino hacia ti mismo, como si se la dijeras a un buen amigo. Si puedes, comparte uno de esos logros con alguien de confianza antes de dormir. Repite este registro cada noche durante al menos una semana y observa cómo cambia tu percepción de ti mismo.', 'Efecto / para qué sirve': 'Combate la sensación de inutilidad y refuerza la autoeficacia registrando evidencia real de capacidad cotidiana.', 'Duración aprox.': '5-10 min', 'Tags': 'depresión, apatía, autoestima, rutina' },
+  { 'ID_Estrategia': 'EST29', 'ID_Categoría': 'CAT06', 'Categoría': 'Activa', 'Nombre estrategia': 'Playlist emocional personalizada', 'Descripción': 'Identifica canciones que asocies con energía, alegría, fuerza o momentos en que te has sentido bien en el pasado. Crea una playlist con esas canciones usando la plataforma de música que prefieras. Cuando necesites activación, ponla en un volumen que puedas sentir físicamente en el cuerpo. Deja que la música entre: mueve los pies, la cabeza o las manos al ritmo aunque sea de forma sutil. Canta o tararea si puedes, ya que la vocalización potencia el efecto regulador de la música. Crea también playlists para otros estados que quieras trabajar: calmar, llorar, soltar o concentrarte.', 'Efecto / para qué sirve': 'Activa el sistema límbico y modifica el estado emocional a través del sonido, aprovechando asociaciones emocionales previas.', 'Duración aprox.': '10-30 min', 'Tags': 'apatía, desánimo, energía, música' },
+  { 'ID_Estrategia': 'EST30', 'ID_Categoría': 'CAT06', 'Categoría': 'Activa', 'Nombre estrategia': 'Caminata o estiramientos conscientes', 'Descripción': 'Elige un tipo de movimiento acorde a tu energía disponible en este momento: caminata corta, estiramientos suaves o saltos en el lugar. Si puedes salir, camina durante al menos 15 minutos preferiblemente en un espacio con naturaleza o luz natural. Si estás en casa, realiza una secuencia de estiramientos comenzando por el cuello, hombros, espalda y piernas. Mientras te mueves, enfoca la atención en las sensaciones físicas: el suelo bajo los pies, el aire en la piel, el movimiento de los músculos. No uses el tiempo de movimiento para pensar o resolver problemas: dale al cuerpo el protagonismo. Termina con una respiración profunda y nota cómo se sienten tu cuerpo y tu mente ahora.', 'Efecto / para qué sirve': 'Libera endorfinas, reduce el cortisol y mejora el estado de ánimo de forma fisiológica con resultados desde los primeros minutos.', 'Duración aprox.': '15-30 min', 'Tags': 'depresión, apatía, cuerpo, energía, movimiento' },
+  { 'ID_Estrategia': 'EST31', 'ID_Categoría': 'CAT06', 'Categoría': 'Activa', 'Nombre estrategia': 'Técnica de microrretos', 'Descripción': 'Identifica la tarea o situación que has estado evitando y que te genera resistencia o un peso difuso. Divide esa tarea en el paso más pequeño posible: literalmente el mínimo que puedas hacer en menos de 2 minutos. Comprométete solo con ese microrreto, no con la tarea completa ni con lo que viene después. Pon un temporizador de 2 a 5 minutos y comienza sin pensar en el resultado ni en los pasos siguientes. Cuando termine el tiempo, evalúa si quieres continuar o parar: ambas opciones son completamente válidas. Celebra haber dado el primer paso, porque iniciar es lo más difícil cuando hay apatía o bloqueo.', 'Efecto / para qué sirve': 'Genera sensación de logro y activa gradualmente la motivación aprovechando que el inicio es el mayor obstáculo en la apatía.', 'Duración aprox.': 'Variable', 'Tags': 'apatía, depresión, motivación, inicio' },
+];
+
+// ══════════════════════════════════════════════
+//  ESTADO GLOBAL
+// ══════════════════════════════════════════════
+let currentCatKey = null;
+let currentStrategy = null;
+let fromSOS = false;  // para saber a dónde volver desde detalle
+let selectedEmotions = new Set();
+
+function briefDesc(desc) {
+  if (!desc) return '';
+  const s = desc.split('. ')[0];
+  return s.endsWith('.') ? s : s + '.';
+}
+
+// ══════════════════════════════════════════════
+//  LOCAL STORAGE — Kit SOS
+// ══════════════════════════════════════════════
+function getSaved() {
+  return JSON.parse(localStorage.getItem('sos-kit') || '[]');
+}
+function isSaved(id) {
+  return getSaved().includes(id);
+}
+function toggleSaved(id) {
+  const saved = getSaved();
+  const idx = saved.indexOf(id);
+  if (idx > -1) saved.splice(idx, 1);
+  else saved.push(id);
+  localStorage.setItem('sos-kit', JSON.stringify(saved));
+}
+
+
+// ══════════════════════════════════════════════
+//  PARSEAR PASOS desde la descripción
+// ══════════════════════════════════════════════
+function parseSteps(desc) {
+  if (!desc) return [];
+  return desc
+    .split(/\.\s+/)
+    .map(s => s.trim().replace(/\.$/, ''))
+    .filter(s => s.length > 4)
+    .map(s => s + '.');
+}
+
+// ══════════════════════════════════════════════
+//  NAVEGACIÓN ENTRE PANTALLAS
+// ══════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const next = document.getElementById(id);
+  // force reflow so transition fires
+  void next.offsetWidth;
+  next.classList.add('active');
+  // scroll body to top
+  const body = next.querySelector('.screen-body');
+  if (body) body.scrollTop = 0;
+}
+
+// ══════════════════════════════════════════════
+//  RENDER HOME — botones de categoría
+// ══════════════════════════════════════════════
+function renderHomeCats() {
+  const container = document.getElementById('home-cats');
+  container.innerHTML = CAT_ORDER.map(key => {
+    const c = CATS[key];
+    return `
+    <button class="cat-btn" data-cat="${key}">
+      <div class="cat-icon-box" style="background:${c.iconBg};color:${c.subColor}">
+        ${ICONS[c.icon]}
+      </div>
+      <div class="cat-text">
+        <div class="cat-title" style="color:${c.titleColor}">${c.title}</div>
+        <div class="cat-subtitle" style="color:${c.subColor}">${c.subtitle}</div>
+      </div>
+      <span class="cat-arrow">›</span>
+    </button>`;
+  }).join('');
+
+  container.querySelectorAll('.cat-btn').forEach(btn => {
+    btn.addEventListener('click', () => openList(btn.dataset.cat));
+  });
+}
+
+// ══════════════════════════════════════════════
+//  RENDER LIST SCREEN
+// ══════════════════════════════════════════════
+function openList(catKey) {
+  currentCatKey = catKey;
+  const c = CATS[catKey];
+
+  // Nav title
+  document.getElementById('list-nav-title').textContent = c.title;
+
+  // Hero
+  const hero = document.getElementById('list-hero');
+  hero.style.background = c.iconBg;
+  hero.style.borderColor = c.subColor + '30';
+  hero.innerHTML = `
+    <div class="hero-label" style="color:${c.subColor}">${catKey}</div>
+    <div class="hero-title" style="color:${c.titleColor}">${c.frase}</div>
+    <div class="hero-sub" style="color:${c.titleColor}">${c.heroDesc}</div>
+  `;
+
+  // Strategy list
+  const list = document.getElementById('strategy-list');
+  const strats = ESTRATEGIAS.filter(e => e['Categoría'] === catKey);
+  list.innerHTML = strats.map(s => `
+    <div class="strategy-item" data-id="${s['ID_Estrategia']}">
+      <div class="strategy-icon-box" style="background:${c.iconBg};color:${c.subColor}">
+        ${ICONS[c.icon]}
+      </div>
+      <div class="strategy-info">
+        <div class="strategy-name">${s['Nombre estrategia']}</div>
+        <div class="strategy-brief">${s['Efecto / para qué sirve']}</div>
+      </div>
+      <span class="strategy-arrow">›</span>
+    </div>
+  `).join('');
+
+  list.querySelectorAll('.strategy-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const strat = ESTRATEGIAS.find(e => e['ID_Estrategia'] === item.dataset.id);
+      if (strat) openDetail(strat);
+    });
+  });
+
+  showScreen('screen-list');
+}
+
+// ══════════════════════════════════════════════
+//  RENDER DETAIL SCREEN
+// ══════════════════════════════════════════════
+function openDetail(strategy, source = 'list') {
+  currentStrategy = strategy;
+  fromSOS = source === 'sos';
+  const catKey = strategy['Categoría'];
+  const c = CATS[catKey] || {};
+
+  // Nav title
+  document.getElementById('detail-nav-title').textContent = catKey;
+
+  // Hero
+  const hero = document.getElementById('detail-hero');
+  hero.style.background = c.iconBg || '#f0f0f0';
+  hero.style.borderColor = (c.subColor || '#888') + '30';
+  hero.innerHTML = `
+    <div class="hero-label" style="color:${c.subColor}">${catKey}</div>
+    <div class="hero-title" style="color:${c.titleColor}">${strategy['Nombre estrategia']}</div>
+    <span class="hero-badge" style="color:${c.subColor}">${ICONS.clock} ${strategy['Duración aprox.']}</span>
+  `;
+
+  // Steps
+  const steps = parseSteps(strategy['Descripción']);
+  const stepsEl = document.getElementById('detail-steps');
+  stepsEl.innerHTML = steps.map((step, i) => `
+    <div class="step-item">
+      <div class="step-num" style="background:${c.iconBg};color:${c.subColor}">${i + 1}</div>
+      <div class="step-text">${step}</div>
+    </div>
+  `).join('');
+
+  // Effect box
+  document.getElementById('detail-effect').innerHTML = `
+    <div class="effect-icon">${ICONS.sparkles}</div>
+    <div class="effect-content">
+      <div class="effect-label">Para qué sirve</div>
+      <div class="effect-text">${strategy['Efecto / para qué sirve']}</div>
+    </div>
+  `;
+
+  // Save button
+  renderSaveBtn(strategy['ID_Estrategia']);
+
+  showScreen('screen-detail');
+}
+
+function renderSaveBtn(id) {
+  const saved = isSaved(id);
+  const btn = document.getElementById('save-btn');
+  btn.className = 'save-btn' + (saved ? ' saved' : '');
+  document.getElementById('save-btn-icon').innerHTML = saved ? ICONS.heartFilled : ICONS.heartOutline;
+  document.getElementById('save-btn-text').textContent = saved ? 'Guardado en kit SOS' : 'Guardar en kit SOS';
+}
+
+// ══════════════════════════════════════════════
+//  EXPLORAR — bottom sheet
+// ══════════════════════════════════════════════
+function openExplorar() {
+  const grid = document.getElementById('explorar-grid');
+  grid.innerHTML = CAT_ORDER.map(key => {
+    const c = CATS[key];
+    return `
+    <div class="explorar-cat-card" data-cat="${key}" style="border-color:${c.subColor}22">
+      <div class="explorar-cat-icon" style="background:${c.iconBg};color:${c.subColor}">
+        ${ICONS[c.icon]}
+      </div>
+      <div class="explorar-cat-title" style="color:${c.titleColor}">${c.title}</div>
+    </div>`;
+  }).join('');
+
+  grid.querySelectorAll('.explorar-cat-card').forEach(card => {
+    card.addEventListener('click', () => {
+      closeExplorar();
+      openList(card.dataset.cat);
+    });
+  });
+
+  document.getElementById('explorar-overlay').classList.add('open');
+}
+
+function closeExplorar() {
+  document.getElementById('explorar-overlay').classList.remove('open');
+}
+
+// ══════════════════════════════════════════════
+//  IDENTIFICAR EMOCIÓN
+// ══════════════════════════════════════════════
+function chipHTML(item, f) {
+  const sel = selectedEmotions.has(item.key);
+  const isN3 = item.nivel === 3;
+  const bg = sel ? f.color : (isN3 ? f.bg : 'white');
+  const color = sel ? 'white' : f.color;
+  const border = f.color + (sel ? '' : '44');
+  return `<div class="emotion-chip${isN3 ? ' nivel-3' : ''}${sel ? ' selected' : ''}"
+    data-key="${item.key}" data-familia="${item.familia}"
+    style="background:${bg};color:${color};border-color:${border}">
+    <svg class="emotion-chip-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12"/>
+    </svg>
+    ${item.key}
+  </div>`;
+}
+
+function openIdentify() {
+  const container = document.getElementById('emotion-sections');
+  container.innerHTML = FAMILIA_ORDER.map(fam => {
+    const f = FAMILIAS[fam];
+    const emociones2 = EMOCIONES.filter(e => e.familia === fam && e.nivel === 2);
+    const groups = emociones2.map(em => {
+      const sents = EMOCIONES.filter(s => s.familia === fam && s.nivel === 3 && s.parent === em.key);
+      return `
+      <div class="emotion-group">
+        <div class="emotion-chips">${chipHTML(em, f)}</div>
+        <div class="emotion-chips emotion-sentimientos">${sents.map(s => chipHTML(s, f)).join('')}</div>
+      </div>`;
+    }).join('');
+    return `
+    <div class="emotion-section">
+      <div class="emotion-section-header">
+        <div class="emotion-familia-dot" style="background:${f.color}"></div>
+        <span class="emotion-familia-name">${fam}</span>
+      </div>
+      ${groups}
+    </div>`;
+  }).join('');
+
+  container.querySelectorAll('.emotion-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      const key = chip.dataset.key;
+      const f = FAMILIAS[chip.dataset.familia];
+      const isN3 = chip.classList.contains('nivel-3');
+      if (selectedEmotions.has(key)) {
+        selectedEmotions.delete(key);
+        chip.classList.remove('selected');
+        chip.style.background = isN3 ? f.bg : 'white';
+        chip.style.color = f.color;
+        chip.style.borderColor = f.color + '44';
+      } else {
+        selectedEmotions.add(key);
+        chip.classList.add('selected');
+        chip.style.background = f.color;
+        chip.style.color = 'white';
+        chip.style.borderColor = f.color;
+      }
+      updateContinueBtn();
+    });
+  });
+
+  updateContinueBtn();
+  showScreen('screen-identify');
+}
+
+function updateContinueBtn() {
+  const btn = document.getElementById('identify-continue');
+  const n = selectedEmotions.size;
+  btn.disabled = n === 0;
+  btn.textContent = n > 0
+    ? `Continuar · ${n} seleccionada${n !== 1 ? 's' : ''}`
+    : 'Continuar';
+}
+
+// ══════════════════════════════════════════════
+//  SUGERENCIAS BASADAS EN EMOCIONES
+// ══════════════════════════════════════════════
+function computeSuggestions() {
+  const tally = {};
+  EMOCIONES.filter(e => selectedEmotions.has(e.key)).forEach(e => {
+    e.cats.forEach(cat => { tally[cat] = (tally[cat] || 0) + 1; });
+  });
+  return Object.entries(tally)
+    .sort((a, b) => b[1] - a[1])
+    .map(([cat, count]) => ({ cat, count }));
+}
+
+function openSuggest() {
+  const suggestions = computeSuggestions();
+  const maxCount = suggestions[0]?.count || 1;
+
+  const hero = document.getElementById('suggest-hero');
+  const tags = Array.from(selectedEmotions).map(emocion => {
+    const entry = EMOCIONES.find(e => e.key === emocion);
+    const f = FAMILIAS[entry?.familia] || {};
+    return `<span class="suggest-emotion-tag" style="background:${f.bg};color:${f.color}">${emocion}</span>`;
+  }).join('');
+  hero.style.background = '#EDECFA';
+  hero.innerHTML = `
+    <div class="suggest-hero-label" style="color:#534AB7">Tu estado ahora</div>
+    <div class="suggest-hero-title" style="color:#26215C">Identificamos lo que sientes</div>
+    <div class="suggest-emotion-tags">${tags}</div>
+  `;
+
+  const catsEl = document.getElementById('suggest-cats');
+  catsEl.innerHTML = suggestions.map(({ cat, count }, i) => {
+    const c = CATS[cat] || {};
+    const pct = Math.round((count / maxCount) * 100);
+    return `
+    <div class="suggest-cat-card" data-cat="${cat}" ${i === 0 ? `style="border-color:${c.subColor}55"` : ''}>
+      <div class="cat-icon-box" style="background:${c.iconBg};color:${c.subColor}">${ICONS[c.icon]}</div>
+      <div class="suggest-cat-info">
+        <div class="suggest-cat-title" style="color:${c.titleColor}">${c.title}</div>
+        <div class="suggest-cat-sub" style="color:${c.subColor}">${c.subtitle}</div>
+        <div class="suggest-match-bar-bg">
+          <div class="suggest-match-bar-fill" style="width:${pct}%;background:${c.subColor}"></div>
+        </div>
+      </div>
+      <span class="cat-arrow">›</span>
+    </div>`;
+  }).join('');
+
+  catsEl.querySelectorAll('.suggest-cat-card').forEach(card => {
+    card.addEventListener('click', () => openList(card.dataset.cat));
+  });
+
+  showScreen('screen-suggest');
+}
+
+// ══════════════════════════════════════════════
+//  RENDER SOS SCREEN
+// ══════════════════════════════════════════════
+function openSOS() {
+  const savedIds = getSaved();
+  const savedStrats = savedIds.map(id => ESTRATEGIAS.find(e => e['ID_Estrategia'] === id)).filter(Boolean);
+
+  const subtitle = document.getElementById('sos-subtitle');
+  subtitle.textContent = savedStrats.length === 0
+    ? 'Sin estrategias guardadas aún'
+    : `${savedStrats.length} estrategia${savedStrats.length !== 1 ? 's' : ''} guardada${savedStrats.length !== 1 ? 's' : ''}`;
+
+  const list = document.getElementById('sos-list');
+  if (savedStrats.length === 0) {
+    list.innerHTML = `
+      <div class="sos-empty">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+        Aún no has guardado estrategias.<br>
+        Explora las categorías y guarda<br>las que más te sirvan.
+      </div>`;
+    showScreen('screen-sos');
+    return;
+  }
+
+  list.innerHTML = savedStrats.map(s => {
+    const c = CATS[s['Categoría']] || {};
+    return `
+    <div class="sos-item" data-id="${s['ID_Estrategia']}">
+      <div class="sos-item-info">
+        <div class="sos-item-name">${s['Nombre estrategia']}</div>
+        <div class="sos-item-brief">${s['Efecto / para qué sirve']}</div>
+        <span class="sos-item-cat" style="background:${c.iconBg || '#eee'};color:${c.subColor || '#555'}">${s['Categoría']}</span>
+      </div>
+      <button class="sos-remove-btn" data-id="${s['ID_Estrategia']}" title="Quitar del kit">
+        ${ICONS.heartFilled}
+      </button>
+    </div>`;
+  }).join('');
+
+  list.querySelectorAll('.sos-item').forEach(item => {
+    item.addEventListener('click', () => {
+      const strat = ESTRATEGIAS.find(e => e['ID_Estrategia'] === item.dataset.id);
+      if (strat) openDetail(strat, 'sos');
+    });
+  });
+
+  list.querySelectorAll('.sos-remove-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleSaved(btn.dataset.id);
+      openSOS();
+    });
+  });
+
+  showScreen('screen-sos');
+}
+
+
+// ══════════════════════════════════════════════
+//  INICIALIZAR EVENTOS
+// ══════════════════════════════════════════════
+function init() {
+  renderHomeCats();
+
+  // Botones home
+  document.getElementById('btn-sos-home').addEventListener('click', openSOS);
+  document.getElementById('btn-identify').addEventListener('click', () => {
+    selectedEmotions = new Set();
+    openIdentify();
+  });
+
+  // Volver botones
+  document.getElementById('btn-back-list').addEventListener('click', () => showScreen('screen-home'));
+  document.getElementById('btn-back-detail').addEventListener('click', () => fromSOS ? openSOS() : openList(currentCatKey));
+  document.getElementById('btn-back-sos').addEventListener('click', () => showScreen('screen-home'));
+  document.getElementById('btn-back-identify').addEventListener('click', () => showScreen('screen-home'));
+  document.getElementById('btn-back-suggest').addEventListener('click', openIdentify);
+  document.getElementById('identify-continue').addEventListener('click', openSuggest);
+
+  // Nav buttons — Inicio
+  ['home-nav-inicio','list-nav-inicio','detail-nav-inicio','sos-nav-inicio','suggest-nav-inicio'].forEach(id => {
+    document.getElementById(id).addEventListener('click', () => showScreen('screen-home'));
+  });
+
+  // Nav buttons — Kit SOS
+  ['home-nav-sos','list-nav-sos','detail-nav-sos','sos-nav-sos','suggest-nav-sos'].forEach(id => {
+    document.getElementById(id).addEventListener('click', openSOS);
+  });
+
+  // Nav buttons — Explorar
+  ['home-nav-explorar','list-nav-explorar','detail-nav-explorar','sos-nav-explorar','suggest-nav-explorar'].forEach(id => {
+    document.getElementById(id).addEventListener('click', openExplorar);
+  });
+
+  // Explorar sheet: close button + click-outside
+  document.getElementById('explorar-close').addEventListener('click', closeExplorar);
+  document.getElementById('explorar-overlay').addEventListener('click', (e) => {
+    if (e.target === document.getElementById('explorar-overlay')) closeExplorar();
+  });
+
+  // Botón guardar SOS en detalle
+  document.getElementById('save-btn').addEventListener('click', () => {
+    if (!currentStrategy) return;
+    const id = currentStrategy['ID_Estrategia'];
+    toggleSaved(id);
+    renderSaveBtn(id);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  ARRANQUE
+// ══════════════════════════════════════════════
+init();
+</script>
+</body>
+</html>
