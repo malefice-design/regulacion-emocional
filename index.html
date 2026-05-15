@@ -23,6 +23,17 @@
   <meta name="twitter:title"       content="Regulación Emocional">
   <meta name="twitter:description" content="Identificá lo que sentís y encontrá técnicas adaptadas a tu estado emocional.">
   <meta name="twitter:image"       content="https://malefice-design.github.io/regulacion-emocional/og-image.png">
+
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#534AB7">
+  <meta name="mobile-web-app-capable" content="yes">
+  <!-- iOS -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Reg. Emocional">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -1624,6 +1635,16 @@ function init() {
 //  ARRANQUE
 // ══════════════════════════════════════════════
 init();
+
+// ── Service Worker (PWA) ─────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('service-worker.js')
+      .then(reg => console.log('SW registrado:', reg.scope))
+      .catch(err => console.warn('SW error:', err));
+  });
+}
 </script>
 </body>
 </html>
