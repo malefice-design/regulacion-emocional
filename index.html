@@ -24,9 +24,14 @@
   <meta name="twitter:description" content="Identificá lo que sentís y encontrá técnicas adaptadas a tu estado emocional.">
   <meta name="twitter:image"       content="https://malefice-design.github.io/regulacion-emocional/og-image.png">
 
+  <!-- Tipografía -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&display=swap" rel="stylesheet">
+
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#534AB7">
+  <meta name="theme-color" content="#4CC2C6">
   <meta name="mobile-web-app-capable" content="yes">
   <!-- iOS -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -79,18 +84,8 @@
     }
 
     /* ── Status bar ── */
-    .status-bar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 14px 22px 6px;
-      font-size: 12px;
-      font-weight: 600;
-      letter-spacing: -0.2px;
-      color: #1a1a1a;
-      flex-shrink: 0;
-    }
-    .status-icons { display: flex; gap: 5px; align-items: center; }
+    .status-bar { display: none; }
+    .status-icons { display: none; }
 
     /* ── Top nav (list + detail) ── */
     .top-nav {
@@ -142,19 +137,20 @@
       color: #aaa;
       transition: color 0.12s ease;
     }
-    .nav-item.active { color: #534AB7; }
+    .nav-item.active { color: #4CC2C6; }
     .nav-item svg { display: block; }
     .nav-label { font-size: 10px; font-weight: 500; }
 
     /* ── Home: header ── */
-    .home-header { padding: 4px 22px 18px; }
-    .home-greeting { font-size: 13px; color: #888; margin-bottom: 4px; }
+    .home-header { padding: 24px 22px 18px; text-align: center; }
+    .home-greeting { font-size: 13px; color: #888; margin-bottom: 6px; }
     .home-question {
-      font-size: 20px;
-      font-weight: 500;
+      font-family: 'Zilla Slab', Georgia, serif;
+      font-size: 26px;
+      font-weight: 700;
       color: #1a1a1a;
-      letter-spacing: -0.4px;
-      line-height: 1.25;
+      letter-spacing: -0.3px;
+      line-height: 1.2;
     }
 
     /* ── Category buttons ── */
@@ -313,8 +309,8 @@
       width: 22px;
       height: 22px;
       border-radius: 50%;
-      background: #f0eef8;
-      color: #534AB7;
+      background: #E4F7F8;
+      color: #4CC2C6;
       font-size: 11px;
       font-weight: 700;
       display: flex;
@@ -505,7 +501,7 @@
       padding: 16px 0 22px;
       font-size: 14px;
       font-weight: 600;
-      color: #534AB7;
+      color: #4CC2C6;
       cursor: pointer;
       border-top: 0.5px solid #e2dfd9;
       margin-top: 8px;
@@ -517,18 +513,18 @@
     .identify-wrap { padding: 14px 16px 12px; }
     .identify-btn {
       display: flex; align-items: center; gap: 12px; width: 100%;
-      background: #EDEEF8; border: 0.5px solid #A5A2E4; border-radius: 14px;
+      background: #E4F7F8; border: 0.5px solid #A8E4E6; border-radius: 14px;
       padding: 13px 16px; cursor: pointer; text-align: left;
       transition: transform 0.12s ease, border-color 0.12s ease;
     }
-    .identify-btn:hover { transform: scale(1.01); border-color: #7B77D4; }
+    .identify-btn:hover { transform: scale(1.01); border-color: #5DD4D8; }
     .identify-btn:active { transform: scale(0.98); }
     .identify-icon-box {
-      width: 36px; height: 36px; border-radius: 10px; background: #C5C3F0;
+      width: 36px; height: 36px; border-radius: 10px; background: #B8E8EA;
       display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
-    .identify-btn-text { font-size: 14px; font-weight: 600; color: #3730A3; letter-spacing: -0.2px; }
-    .identify-btn-sub { font-size: 11px; color: #6B67C8; margin-top: 1px; }
+    .identify-btn-text { font-size: 14px; font-weight: 600; color: #1A7A7E; letter-spacing: -0.2px; }
+    .identify-btn-sub { font-size: 11px; color: #2B9CA0; margin-top: 1px; }
 
     /* ── Identify screen — emotion picker ── */
     #screen-identify .screen-body { padding-bottom: 110px; }
@@ -560,14 +556,14 @@
     .identify-continue-btn {
       width: 100%; display: flex; align-items: center; justify-content: center;
       padding: 15px 20px; border-radius: 14px; border: none;
-      background: #534AB7; color: white;
+      background: #4CC2C6; color: white;
       font-size: 15px; font-weight: 600; letter-spacing: -0.2px;
       cursor: pointer; pointer-events: all;
       transition: transform 0.12s ease, background 0.15s ease;
-      box-shadow: 0 4px 18px rgba(83,74,183,0.28);
+      box-shadow: 0 4px 18px rgba(76,194,198,0.28);
     }
     .identify-continue-btn:disabled { opacity: 0.38; pointer-events: none; box-shadow: none; }
-    .identify-continue-btn:not(:disabled):hover { background: #4139A7; transform: scale(1.01); }
+    .identify-continue-btn:not(:disabled):hover { background: #3AABB0; transform: scale(1.01); }
     .identify-continue-btn:not(:disabled):active { transform: scale(0.97); }
 
     /* ── Suggest screen ── */
@@ -641,7 +637,7 @@
       <div class="identify-wrap">
         <button class="identify-btn" id="btn-identify">
           <div class="identify-icon-box">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#534AB7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4CC2C6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="10"/>
               <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
               <line x1="12" y1="17" x2="12.01" y2="17"/>
@@ -900,7 +896,7 @@ const CATS = {
     subtitle:     'Bucles mentales, autoexigencia, pensamientos catastróficos',
     iconBg:       '#E8EAF6',
     titleColor:   '#26215C',
-    subColor:     '#534AB7',
+    subColor:     '#4CC2C6',
     icon:         'brain',
     frase:        'Dale claridad a tu mente',
     heroDesc:     'Herramientas para ordenar y cuestionar tus pensamientos',
@@ -1490,8 +1486,8 @@ function openSuggest() {
   }).join('');
   hero.style.background = '#EDECFA';
   hero.innerHTML = `
-    <div class="suggest-hero-label" style="color:#534AB7">Tu estado ahora</div>
-    <div class="suggest-hero-title" style="color:#26215C">Identificamos lo que sientes</div>
+    <div class="suggest-hero-label" style="color:#4CC2C6">Tu estado ahora</div>
+    <div class="suggest-hero-title" style="color:#1a1a1a">Identificamos lo que sientes</div>
     <div class="suggest-emotion-tags">${tags}</div>
   `;
 
