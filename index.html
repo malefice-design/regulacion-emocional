@@ -573,7 +573,17 @@
       padding: 24px 16px 32px;
       background: linear-gradient(to bottom, transparent, #f9f8f6 40%);
       pointer-events: none;
+      display: flex; flex-direction: column; gap: 10px;
     }
+    .identify-clear-btn {
+      background: none; border: none; cursor: pointer; pointer-events: all;
+      font-size: 13px; font-weight: 500; color: #999; text-align: center;
+      padding: 4px; letter-spacing: -0.1px;
+      transition: color 0.15s ease;
+      display: none;
+    }
+    .identify-clear-btn.visible { display: block; }
+    .identify-clear-btn:hover { color: #555; }
     .identify-continue-btn {
       width: 100%; display: flex; align-items: center; justify-content: center;
       padding: 15px 20px; border-radius: 14px; border: none;
@@ -847,6 +857,7 @@
       <div id="emotion-sections"></div>
     </div>
     <div class="identify-float">
+      <button class="identify-clear-btn" id="identify-clear">Limpiar selección</button>
       <button class="identify-continue-btn" id="identify-continue" disabled>Continuar</button>
     </div>
   </div>
@@ -1483,17 +1494,32 @@ function openIdentify() {
     });
   });
 
+  // Clear button
+  document.getElementById('identify-clear').addEventListener('click', () => {
+    selectedEmotions.clear();
+    container.querySelectorAll('.emotion-chip.selected').forEach(chip => {
+      const f = FAMILIAS[chip.dataset.familia];
+      chip.classList.remove('selected');
+      chip.style.background = 'white';
+      chip.style.color = f.color;
+      chip.style.borderColor = f.color + '55';
+    });
+    updateContinueBtn();
+  });
+
   updateContinueBtn();
   showScreen('screen-identify');
 }
 
 function updateContinueBtn() {
   const btn = document.getElementById('identify-continue');
+  const clearBtn = document.getElementById('identify-clear');
   const n = selectedEmotions.size;
   btn.disabled = n === 0;
   btn.textContent = n > 0
     ? `Continuar · ${n} seleccionada${n !== 1 ? 's' : ''}`
     : 'Continuar';
+  if (clearBtn) clearBtn.classList.toggle('visible', n > 0);
 }
 
 // ══════════════════════════════════════════════
@@ -1519,9 +1545,9 @@ function openSuggest() {
     const f = FAMILIAS[entry?.familia] || {};
     return `<span class="suggest-emotion-tag" style="background:${f.bg || 'rgba(255,255,255,0.25)'};color:${f.color || 'white'}">${emocion}</span>`;
   }).join('');
-  hero.style.background = '#4CC2C6';
+  hero.style.background = 'linear-gradient(135deg, #1A6B6E 0%, #2E9FA4 100%)';
   hero.innerHTML = `
-    <div class="suggest-hero-label" style="color:rgba(255,255,255,0.75)">Tu estado ahora</div>
+    <div class="suggest-hero-label" style="color:rgba(255,255,255,0.6)">Tu estado ahora</div>
     <div class="suggest-hero-title" style="color:white">Identificamos lo que sientes</div>
     <div class="suggest-emotion-tags">${tags}</div>
   `;
