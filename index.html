@@ -374,13 +374,15 @@
 
     /* ── SOS Kit screen ── */
     .sos-kit-header {
-      padding: 4px 20px 16px;
-      display: flex;
-      align-items: flex-end;
-      gap: 10px;
+      margin: 8px 16px 12px;
+      background: #FCEBEB;
+      border: 0.5px solid #E24B4A;
+      border-radius: 12px;
+      padding: 14px 16px;
     }
-    .sos-kit-title { font-size: 22px; font-weight: 700; color: #A32D2D; letter-spacing: -0.5px; }
-    .sos-kit-count { font-size: 13px; color: #888; padding-bottom: 2px; }
+    .sos-kit-title-row { display: flex; align-items: center; gap: 10px; }
+    .sos-kit-title { font-size: 18px; font-weight: 500; color: #A32D2D; }
+    .sos-kit-count { font-size: 12px; color: #791F1F; margin-top: 4px; }
     .sos-list { padding: 0 16px; display: flex; flex-direction: column; gap: 8px; }
     .sos-item {
       display: flex;
@@ -815,21 +817,19 @@
     </div>
     <div class="screen-body">
       <div class="sos-kit-header">
-        <div>
-          <div style="display:flex;align-items:center;gap:8px;">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#E24B4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M6 10a6 6 0 0 1 12 0v3H6v-3z"/>
-              <rect x="4" y="13" width="16" height="3" rx="1.5"/>
-              <path d="M12 2V4"/>
-              <path d="M5.27 5.27L6.7 6.7"/>
-              <path d="M18.73 5.27L17.3 6.7"/>
-              <path d="M8 19h8"/>
-              <path d="M6 16v3"/><path d="M18 16v3"/>
-            </svg>
-            <span class="sos-kit-title">Kit SOS</span>
-          </div>
-          <div style="font-size:13px;color:#888;margin-top:2px;" id="sos-subtitle">Tus estrategias guardadas</div>
+        <div class="sos-kit-title-row">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A32D2D" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 10a6 6 0 0 1 12 0v3H6v-3z"/>
+            <rect x="4" y="13" width="16" height="3" rx="1.5"/>
+            <path d="M12 2V4"/>
+            <path d="M5.27 5.27L6.7 6.7"/>
+            <path d="M18.73 5.27L17.3 6.7"/>
+            <path d="M8 19h8"/>
+            <path d="M6 16v3"/><path d="M18 16v3"/>
+          </svg>
+          <span class="sos-kit-title">Kit SOS</span>
         </div>
+        <div class="sos-kit-count" id="sos-subtitle"></div>
       </div>
       <div class="sos-list" id="sos-list"></div>
       <div class="sos-list-footer"></div>
@@ -1601,9 +1601,12 @@ function openSOS() {
   const savedStrats = savedIds.map(id => ESTRATEGIAS.find(e => e['ID_Estrategia'] === id)).filter(Boolean);
 
   const subtitle = document.getElementById('sos-subtitle');
-  subtitle.textContent = savedStrats.length === 0
-    ? 'Sin estrategias guardadas aún'
-    : `${savedStrats.length} estrategia${savedStrats.length !== 1 ? 's' : ''} guardada${savedStrats.length !== 1 ? 's' : ''}`;
+  const n = savedStrats.length;
+  subtitle.textContent = n === 0
+    ? 'Aún no tienes estrategias guardadas'
+    : n === 1
+      ? '1 estrategia de rescate rápido'
+      : `${n} estrategias de rescate rápido`;
 
   const list = document.getElementById('sos-list');
   if (savedStrats.length === 0) {
