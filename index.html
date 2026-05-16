@@ -281,6 +281,7 @@
       line-height: 1.4;
     }
     .strategy-arrow { font-size: 16px; color: #bbb; flex-shrink: 0; }
+    .strategy-saved-badge { display: flex; align-items: center; flex-shrink: 0; opacity: 0.55; }
     .strategy-list-footer { height: 12px; }
 
     /* ── Detail screen ── */
@@ -1308,7 +1309,13 @@ function openList(catKey) {
   // Strategy list
   const list = document.getElementById('strategy-list');
   const strats = ESTRATEGIAS.filter(e => e['Categoría'] === catKey);
-  list.innerHTML = strats.map(s => `
+  const savedIds = getSaved();
+  list.innerHTML = strats.map(s => {
+    const saved = savedIds.includes(s['ID_Estrategia']);
+    const badge = saved
+      ? `<span class="strategy-saved-badge" style="color:${c.subColor}">${ICONS.heartFilled}</span>`
+      : '';
+    return `
     <div class="strategy-item" data-id="${s['ID_Estrategia']}">
       <div class="strategy-icon-box" style="background:${c.iconBg};color:${c.subColor}">
         ${ICONS[c.icon]}
@@ -1317,9 +1324,10 @@ function openList(catKey) {
         <div class="strategy-name">${s['Nombre estrategia']}</div>
         <div class="strategy-brief">${s['Efecto / para qué sirve']}</div>
       </div>
+      ${badge}
       <span class="strategy-arrow">›</span>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 
   list.querySelectorAll('.strategy-item').forEach(item => {
     item.addEventListener('click', () => {
