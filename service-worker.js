@@ -1,4 +1,4 @@
-const CACHE_NAME = 'reg-emocional-v3';
+const CACHE_NAME = 'reg-emocional-v4';
 
 const ASSETS = [
   '/regulacion-emocional/',
@@ -17,7 +17,7 @@ self.addEventListener('install', event => {
   );
 });
 
-// Activación: borrar caches viejas
+// Activación: borrar caches viejas y tomar control
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
@@ -30,21 +30,39 @@ self.addEventListener('activate', event => {
   );
 });
 
-// Fetch: Cache-first (app funciona offline)
+// Fetch: Network-first para HTML, cache-first para el resto
 self.addEventListener('fetch', event => {
-  event.respondWith(
-    caches.match(event.request).then(cached => {
-      if (cached) return cached;
-      return fetch(event.request)
+  const url = new URL(event.request.url);
+  const isHTML = event.request.destination === 'document'
+    || url.pathname.endsWith('.html')
+    || url.pathname.endsWith('/');
+
+  if (isHTML) {
+    // Network-first: siempre intenta traer la versión más nueva
+    event.respondWith(
+      fetch(event.request)
         .then(response => {
-          // Cachear respuestas válidas dinámicamente
-          if (response && response.status === 200 && response.type === 'basic') {
+          if (response && response.status === 200) {
             const clone = response.clone();
             caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
           }
           return response;
         })
-        .catch(() => caches.match('/regulacion-emocional/index.html'));
-    })
-  );
+        .catch(() => caches.match(event.request))
+    );
+  } else {
+    // Cache-first para imágenes, iconos, manifest, etc.
+    event.respondWith(
+      caches.match(event.request).then(cached => {
+        if (cached) return cached;
+        return fetch(event.request).then(response => {
+          if (response && response.status === 200 && response.type === 'basic') {
+            const clone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+          }
+          return response;
+        });
+      })
+    );
+  }
 });
