@@ -529,24 +529,45 @@
     /* ── Identify screen — emotion picker ── */
     #screen-identify .screen-body { padding-bottom: 110px; }
     .identify-intro { padding: 4px 18px 20px; font-size: 14px; color: #666; line-height: 1.5; }
-    .emotion-section { margin-bottom: 22px; }
-    .emotion-section-header { display: flex; align-items: center; gap: 8px; padding: 0 16px 10px; }
-    .emotion-familia-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
-    .emotion-familia-name { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; color: #aaa; }
-    .emotion-chips { display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px; }
+    /* ── Accordion de familia ── */
+    .emotion-section { margin-bottom: 10px; }
+    .familia-toggle {
+      display: flex; align-items: center; justify-content: space-between;
+      width: 100%; padding: 9px 14px; margin: 0 16px; margin-bottom: 10px;
+      width: calc(100% - 32px);
+      background: white; border: 1px solid #e2dfd9; border-radius: 10px;
+      cursor: pointer; text-align: left;
+      transition: border-color 0.15s;
+    }
+    .familia-toggle:hover { border-color: #c8c4bc; }
+    .familia-toggle-left { display: flex; align-items: center; gap: 8px; }
+    .familia-toggle-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .familia-toggle-name { font-size: 12px; font-weight: 600; letter-spacing: 0.1px; }
+    .familia-toggle-chevron { transition: transform 0.2s ease; color: #aaa; flex-shrink: 0; }
+    .familia-toggle.collapsed .familia-toggle-chevron { transform: rotate(-90deg); }
+    .familia-content { overflow: hidden; transition: max-height 0.25s ease; max-height: 2000px; }
+    .familia-content.collapsed { max-height: 0; }
+
+    /* ── Chips de emoción ── */
+    .emotion-group-row { display: flex; flex-wrap: wrap; gap: 7px; padding: 0 16px; margin-bottom: 8px; }
     .emotion-chip {
-      display: inline-flex; align-items: center; gap: 5px;
-      padding: 7px 13px; border-radius: 20px; border: 1px solid;
+      display: inline-flex; align-items: center; gap: 0;
+      padding: 7px 13px; border-radius: 20px; border: 1.5px solid;
       font-size: 13px; font-weight: 500; cursor: pointer;
-      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+      background: white;
+      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, gap 0.12s ease;
       user-select: none; -webkit-user-select: none;
+      white-space: nowrap;
     }
     .emotion-chip:active { transform: scale(0.93); }
-    .emotion-chip-check { width: 13px; height: 13px; flex-shrink: 0; opacity: 0; transition: opacity 0.12s ease; }
-    .emotion-chip.selected .emotion-chip-check { opacity: 1; }
-    .emotion-chip.nivel-3 { font-size: 12px; padding: 5px 11px; font-weight: 400; opacity: 0.9; }
-    .emotion-group { margin-bottom: 10px; }
-    .emotion-sentimientos { padding-left: 20px; margin-top: 6px; }
+    .emotion-chip-check {
+      width: 0; height: 13px; overflow: hidden; flex-shrink: 0;
+      transition: width 0.12s ease, margin-right 0.12s ease;
+      margin-right: 0;
+    }
+    .emotion-chip.selected { gap: 5px; }
+    .emotion-chip.selected .emotion-chip-check { width: 13px; margin-right: 0; }
+    .emotion-chip.nivel-3 { font-weight: 400; }
     .identify-float {
       position: absolute; bottom: 0; left: 0; right: 0;
       padding: 24px 16px 32px;
@@ -949,14 +970,14 @@ const CAT_ORDER = ['Fisiológica','Cognitiva','Expresivo','Vincular','Reflexiva'
 //  FAMILIAS Y EMOCIONES (nivel 2, desde emociones.csv)
 // ══════════════════════════════════════════════
 const FAMILIAS = {
-  'Ira':       { bg: '#FFF0F0', color: '#B03030' },
-  'Miedo':     { bg: '#EDECFA', color: '#4A43AA' },
-  'Asco':      { bg: '#F0FFF4', color: '#276749' },
-  'Tristeza':  { bg: '#EEF3FF', color: '#2563EB' },
-  'Felicidad': { bg: '#FFFDE7', color: '#92600A' },
-  'Sorpresa':  { bg: '#E0F7FA', color: '#0E7490' },
+  'Ira':       { bg: '#FFF0F2', color: '#9B2040' },  // rosado-rojo
+  'Miedo':     { bg: '#EDECFA', color: '#4A43AA' },  // morado
+  'Asco':      { bg: '#F0FFF4', color: '#276749' },  // verde
+  'Tristeza':  { bg: '#EEF3FF', color: '#2563EB' },  // azul
+  'Sorpresa':  { bg: '#FFF4EC', color: '#C0610A' },  // naranja
+  'Felicidad': { bg: '#FFFDE7', color: '#A07800' },  // amarillo
 };
-const FAMILIA_ORDER = ['Ira','Miedo','Asco','Tristeza','Felicidad','Sorpresa'];
+const FAMILIA_ORDER = ['Ira','Miedo','Asco','Tristeza','Sorpresa','Felicidad'];
 
 const EMOCIONES = [
   // ─── IRA ──────────────────────────────────────
@@ -1390,9 +1411,9 @@ function closeExplorar() {
 function chipHTML(item, f) {
   const sel = selectedEmotions.has(item.key);
   const isN3 = item.nivel === 3;
-  const bg = sel ? f.color : (isN3 ? f.bg : 'white');
+  const bg    = sel ? f.color : 'white';
   const color = sel ? 'white' : f.color;
-  const border = f.color + (sel ? '' : '44');
+  const border = f.color + (sel ? '' : '55');
   return `<div class="emotion-chip${isN3 ? ' nivel-3' : ''}${sel ? ' selected' : ''}"
     data-key="${item.key}" data-familia="${item.familia}"
     style="background:${bg};color:${color};border-color:${border}">
@@ -1408,35 +1429,49 @@ function openIdentify() {
   container.innerHTML = FAMILIA_ORDER.map(fam => {
     const f = FAMILIAS[fam];
     const emociones2 = EMOCIONES.filter(e => e.familia === fam && e.nivel === 2);
-    const groups = emociones2.map(em => {
+    // Cada nivel-2 + sus nivel-3 en la misma fila
+    const rows = emociones2.map(em => {
       const sents = EMOCIONES.filter(s => s.familia === fam && s.nivel === 3 && s.parent === em.key);
-      return `
-      <div class="emotion-group">
-        <div class="emotion-chips">${chipHTML(em, f)}</div>
-        <div class="emotion-chips emotion-sentimientos">${sents.map(s => chipHTML(s, f)).join('')}</div>
-      </div>`;
+      const chips = [em, ...sents].map(item => chipHTML(item, f)).join('');
+      return `<div class="emotion-group-row">${chips}</div>`;
     }).join('');
+
+    const chevron = `<svg class="familia-toggle-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
+
     return `
     <div class="emotion-section">
-      <div class="emotion-section-header">
-        <div class="emotion-familia-dot" style="background:${f.color}"></div>
-        <span class="emotion-familia-name">${fam}</span>
-      </div>
-      ${groups}
+      <button class="familia-toggle" data-familia="${fam}" aria-expanded="true">
+        <div class="familia-toggle-left">
+          <div class="familia-toggle-dot" style="background:${f.color}"></div>
+          <span class="familia-toggle-name" style="color:${f.color}">${fam}</span>
+        </div>
+        ${chevron}
+      </button>
+      <div class="familia-content">${rows}</div>
     </div>`;
   }).join('');
 
+  // Accordion toggles
+  container.querySelectorAll('.familia-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const content = btn.nextElementSibling;
+      const collapsed = content.classList.toggle('collapsed');
+      btn.classList.toggle('collapsed', collapsed);
+      btn.setAttribute('aria-expanded', !collapsed);
+    });
+  });
+
+  // Chip clicks
   container.querySelectorAll('.emotion-chip').forEach(chip => {
     chip.addEventListener('click', () => {
       const key = chip.dataset.key;
       const f = FAMILIAS[chip.dataset.familia];
-      const isN3 = chip.classList.contains('nivel-3');
       if (selectedEmotions.has(key)) {
         selectedEmotions.delete(key);
         chip.classList.remove('selected');
-        chip.style.background = isN3 ? f.bg : 'white';
+        chip.style.background = 'white';
         chip.style.color = f.color;
-        chip.style.borderColor = f.color + '44';
+        chip.style.borderColor = f.color + '55';
       } else {
         selectedEmotions.add(key);
         chip.classList.add('selected');
@@ -1482,12 +1517,12 @@ function openSuggest() {
   const tags = Array.from(selectedEmotions).map(emocion => {
     const entry = EMOCIONES.find(e => e.key === emocion);
     const f = FAMILIAS[entry?.familia] || {};
-    return `<span class="suggest-emotion-tag" style="background:${f.bg};color:${f.color}">${emocion}</span>`;
+    return `<span class="suggest-emotion-tag" style="background:rgba(255,255,255,0.25);color:white">${emocion}</span>`;
   }).join('');
-  hero.style.background = '#EDECFA';
+  hero.style.background = '#4CC2C6';
   hero.innerHTML = `
-    <div class="suggest-hero-label" style="color:#4CC2C6">Tu estado ahora</div>
-    <div class="suggest-hero-title" style="color:#1a1a1a">Identificamos lo que sientes</div>
+    <div class="suggest-hero-label" style="color:rgba(255,255,255,0.75)">Tu estado ahora</div>
+    <div class="suggest-hero-title" style="color:white">Identificamos lo que sientes</div>
     <div class="suggest-emotion-tags">${tags}</div>
   `;
 
