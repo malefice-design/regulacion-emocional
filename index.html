@@ -129,17 +129,23 @@
       padding: 10px 0 18px;
     }
     .nav-item {
+      flex: 1;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
       gap: 3px;
       cursor: pointer;
       color: #999;
-      padding: 6px 14px;
-      border-radius: 10px;
       transition: color 0.12s ease, background 0.12s ease;
     }
-    .nav-item.active { color: #1a1a1a; background: #f2f2f0; }
+    .nav-item.active { color: #1a1a1a; }
+    .nav-item .nav-pill {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 3px; padding: 6px 14px; border-radius: 10px;
+      transition: background 0.12s ease;
+    }
+    .nav-item.active .nav-pill { background: #f2f2f0; }
     .nav-item svg { display: block; }
     .nav-label { font-size: 10px; font-weight: 500; }
 
@@ -1705,6 +1711,14 @@ function init() {
 //  ARRANQUE
 // ══════════════════════════════════════════════
 init();
+
+// ── Nav pill wrapper (centra ícono+label sin que el pill afecte el layout) ───
+document.querySelectorAll('.nav-item').forEach(item => {
+  const pill = document.createElement('div');
+  pill.className = 'nav-pill';
+  while (item.firstChild) pill.appendChild(item.firstChild);
+  item.appendChild(pill);
+});
 
 // ── Service Worker (PWA) ─────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
