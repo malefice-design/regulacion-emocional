@@ -573,17 +573,17 @@
       padding: 24px 16px 32px;
       background: linear-gradient(to bottom, transparent, #f9f8f6 40%);
       pointer-events: none;
-      display: flex; flex-direction: column; gap: 10px;
     }
     .identify-clear-btn {
-      background: none; border: none; cursor: pointer; pointer-events: all;
-      font-size: 13px; font-weight: 500; color: #999; text-align: center;
-      padding: 4px; letter-spacing: -0.1px;
-      transition: color 0.15s ease;
-      display: none;
+      background: none; border: none; cursor: pointer;
+      font-size: 13px; font-weight: 500; color: #4CC2C6;
+      padding: 6px 2px; letter-spacing: -0.1px;
+      transition: opacity 0.15s ease;
+      visibility: hidden; opacity: 0;
+      white-space: nowrap;
     }
-    .identify-clear-btn.visible { display: block; }
-    .identify-clear-btn:hover { color: #555; }
+    .identify-clear-btn.visible { visibility: visible; opacity: 1; }
+    .identify-clear-btn:hover { opacity: 0.7; }
     .identify-continue-btn {
       width: 100%; display: flex; align-items: center; justify-content: center;
       padding: 15px 20px; border-radius: 14px; border: none;
@@ -602,7 +602,7 @@
     .suggest-hero-label { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; opacity: 0.65; margin-bottom: 6px; }
     .suggest-hero-title { font-size: 18px; font-weight: 700; letter-spacing: -0.4px; line-height: 1.25; margin-bottom: 10px; }
     .suggest-emotion-tags { display: flex; flex-wrap: wrap; gap: 5px; }
-    .suggest-emotion-tag { display: inline-block; padding: 3px 9px; border-radius: 10px; font-size: 11px; font-weight: 600; box-shadow: 0 1px 4px rgba(0,0,0,0.12); }
+    .suggest-emotion-tag { display: inline-block; padding: 3px 9px; border-radius: 10px; font-size: 11px; font-weight: 600; }
     .suggest-section-label { padding: 0 18px 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: #999; }
     .suggest-cats { padding: 0 16px; display: flex; flex-direction: column; gap: 10px; }
     .suggest-cat-card {
@@ -851,13 +851,13 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
       <span class="top-nav-title">¿Qué emoción sientes?</span>
+      <button class="identify-clear-btn" id="identify-clear">Limpiar</button>
     </div>
     <div class="screen-body">
       <p class="identify-intro">Selecciona todo lo que reconoces en ti ahora mismo. Puedes elegir varias.</p>
       <div id="emotion-sections"></div>
     </div>
     <div class="identify-float">
-      <button class="identify-clear-btn" id="identify-clear">Limpiar selección</button>
       <button class="identify-continue-btn" id="identify-continue" disabled>Continuar</button>
     </div>
   </div>
@@ -1545,10 +1545,11 @@ function openSuggest() {
     const f = FAMILIAS[entry?.familia] || {};
     return `<span class="suggest-emotion-tag" style="background:${f.bg || 'rgba(255,255,255,0.25)'};color:${f.color || 'white'}">${emocion}</span>`;
   }).join('');
-  hero.style.background = 'linear-gradient(135deg, #1A6B6E 0%, #2E9FA4 100%)';
+  hero.style.background = 'white';
+  hero.style.border = '0.5px solid #e2dfd9';
   hero.innerHTML = `
-    <div class="suggest-hero-label" style="color:rgba(255,255,255,0.6)">Tu estado ahora</div>
-    <div class="suggest-hero-title" style="color:white">Identificamos lo que sientes</div>
+    <div class="suggest-hero-label" style="color:#4CC2C6">Tu estado ahora</div>
+    <div class="suggest-hero-title" style="color:#1a1a1a">Identificamos lo que sientes</div>
     <div class="suggest-emotion-tags">${tags}</div>
   `;
 
