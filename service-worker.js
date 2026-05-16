@@ -1,4 +1,4 @@
-const CACHE_NAME = 'reg-emocional-v2';
+const CACHE_NAME = 'reg-emocional-v3';
 
 const ASSETS = [
   '/regulacion-emocional/',
