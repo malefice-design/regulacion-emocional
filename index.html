@@ -271,6 +271,7 @@
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
+      position: relative;
     }
     .strategy-info { flex: 1; min-width: 0; }
     .strategy-name { font-size: 14px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.2px; line-height: 1.3; }
@@ -281,7 +282,12 @@
       line-height: 1.4;
     }
     .strategy-arrow { font-size: 16px; color: #bbb; flex-shrink: 0; }
-    .strategy-saved-badge { display: flex; align-items: center; flex-shrink: 0; opacity: 0.55; }
+    .strategy-saved-badge {
+      position: absolute; bottom: -3px; right: -3px;
+      width: 14px; height: 14px;
+      background: white; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
     .strategy-list-footer { height: 12px; }
 
     /* ── Detail screen ── */
@@ -1313,18 +1319,18 @@ function openList(catKey) {
   list.innerHTML = strats.map(s => {
     const saved = savedIds.includes(s['ID_Estrategia']);
     const badge = saved
-      ? `<span class="strategy-saved-badge" style="color:${c.subColor}">${ICONS.heartFilled}</span>`
+      ? `<span class="strategy-saved-badge" style="color:${c.subColor}"><svg width="9" height="9" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></span>`
       : '';
     return `
     <div class="strategy-item" data-id="${s['ID_Estrategia']}">
       <div class="strategy-icon-box" style="background:${c.iconBg};color:${c.subColor}">
         ${ICONS[c.icon]}
+        ${badge}
       </div>
       <div class="strategy-info">
         <div class="strategy-name">${s['Nombre estrategia']}</div>
         <div class="strategy-brief">${s['Efecto / para qué sirve']}</div>
       </div>
-      ${badge}
       <span class="strategy-arrow">›</span>
     </div>`;
   }).join('');
