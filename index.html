@@ -1276,18 +1276,20 @@
 // ══════════════════════════════════════════════
 const CATS = {
   'Fisiológica': {
-    title:        'Bajar la activación',
-    subtitle:     'Ansiedad, enojo, pánico, estrés',
+    nombre:       'Cuerpo',
+    title:        'Calmar el cuerpo',
+    subtitle:     'Sobrecarga sensorial, ansiedad, estrés, ira',
     iconBg:       '#FFF9C4',
     titleColor:   '#412402',
     subColor:     '#854F0B',
     icon:         'wind',
     frase:        'Calma tu cuerpo primero',
-    heroDesc:     'Técnicas corporales para regular el sistema nervioso',
+    heroDesc:     'Técnicas para bajar la activación física cuando todo se siente demasiado',
   },
   'Cognitiva': {
-    title:        'Clarificar mis pensamientos',
-    subtitle:     'Bucles mentales, autoexigencia, pensamientos catastróficos',
+    nombre:       'Pensamientos',
+    title:        'Ordenar los pensamientos',
+    subtitle:     'Rumiación, autocrítica, pensamiento catastrófico',
     iconBg:       '#E8EAF6',
     titleColor:   '#26215C',
     subColor:     '#534AB7',
@@ -1296,44 +1298,48 @@ const CATS = {
     heroDesc:     'Herramientas para ordenar y cuestionar tus pensamientos',
   },
   'Expresivo': {
-    title:        'Dar salida a lo que siento',
-    subtitle:     'Emociones bloqueadas, tristeza, rabia contenida',
+    nombre:       'Expresión',
+    title:        'Expresar lo que siento',
+    subtitle:     'Bloqueo emocional, tristeza, ira contenida',
     iconBg:       '#E1F5EE',
     titleColor:   '#04342C',
     subColor:     '#0F6E56',
     icon:         'bubble',
     frase:        'Dale voz a lo que sientes',
-    heroDesc:     'Formas de expresar y liberar lo que llevas dentro',
+    heroDesc:     'Formas de expresar lo que no encuentras cómo decir',
   },
   'Vincular': {
-    title:        'Buscar conexión',
-    subtitle:     'Soledad, sensación de rechazo, apego inseguro',
+    nombre:       'Contención',
+    title:        'Encontrar sostén',
+    subtitle:     'Soledad, necesidad de apoyo, desconexión',
     iconBg:       '#FBEAF0',
     titleColor:   '#4B1528',
     subColor:     '#993556',
     icon:         'heart',
-    frase:        'Reconecta con los demás',
-    heroDesc:     'Formas de reducir el aislamiento y sentir pertenencia',
+    frase:        'Busca un lugar donde sostenerte',
+    heroDesc:     'Recursos para sentirte contenida, desde adentro o con otros',
   },
   'Reflexiva': {
-    title:        'Comprender y resignificar',
-    subtitle:     'Procesos de duelo, sentido, crisis existenciales',
+    nombre:       'Comprensión',
+    title:        'Procesar lo que estoy viviendo',
+    subtitle:     'Cambios grandes, pérdidas, confusión',
     iconBg:       '#FFF3E0',
     titleColor:   '#412402',
     subColor:     '#854F0B',
     icon:         'notebook',
-    frase:        'Comprende lo que te pasa',
-    heroDesc:     'Herramientas para dar sentido a lo que vives',
+    frase:        'Dale sentido a lo que estás viviendo',
+    heroDesc:     'Herramientas para procesar experiencias difíciles y encontrarles sentido',
   },
   'Activa': {
-    title:        'Reactivar energía',
-    subtitle:     'Apatía, desánimo, estados depresivos',
+    nombre:       'Impulso',
+    title:        'Volver a moverte',
+    subtitle:     'Desánimo, bloqueo, dificultad para empezar',
     iconBg:       '#E3F2FD',
     titleColor:   '#042C53',
     subColor:     '#185FA5',
     icon:         'lightning',
-    frase:        'Despierta tu energía',
-    heroDesc:     'Actividades para recuperar el movimiento y la vitalidad',
+    frase:        'Un paso pequeño es suficiente',
+    heroDesc:     'Técnicas para retomar el movimiento y la motivación',
   },
 };
 
@@ -1662,7 +1668,7 @@ function openList(catKey) {
   hero.style.background = c.iconBg;
   hero.style.borderColor = c.subColor + '30';
   hero.innerHTML = `
-    <div class="hero-label" style="color:${c.subColor}">${catKey}</div>
+    <div class="hero-label" style="color:${c.subColor}">${c.nombre}</div>
     <div class="hero-title" style="color:${c.titleColor}">${c.frase}</div>
     <div class="hero-sub" style="color:${c.titleColor}">${c.heroDesc}</div>
   `;
@@ -1710,14 +1716,14 @@ function openDetail(strategy, source = 'list') {
   const c = CATS[catKey] || {};
 
   // Nav title
-  document.getElementById('detail-nav-title').textContent = catKey;
+  document.getElementById('detail-nav-title').textContent = c.nombre || catKey;
 
   // Hero
   const hero = document.getElementById('detail-hero');
   hero.style.background = c.iconBg || '#f0f0f0';
   hero.style.borderColor = (c.subColor || '#888') + '30';
   hero.innerHTML = `
-    <div class="hero-label" style="color:${c.subColor}">${catKey}</div>
+    <div class="hero-label" style="color:${c.subColor}">${c.nombre || catKey}</div>
     <div class="hero-title" style="color:${c.titleColor}">${strategy['Nombre estrategia']}</div>
     <span class="hero-badge" style="color:${c.subColor}">${ICONS.clock} ${strategy['Duración aprox.']}</span>
   `;
@@ -2203,7 +2209,7 @@ function openSOS() {
       <div class="sos-item-info">
         <div class="sos-item-name">${s['Nombre estrategia']}</div>
         <div class="sos-item-brief">${s['Efecto / para qué sirve']}</div>
-        <span class="sos-item-cat" style="background:${c.iconBg || '#eee'};color:${c.subColor || '#555'}">${s['Categoría']}</span>
+        <span class="sos-item-cat" style="background:${c.iconBg || '#eee'};color:${c.subColor || '#555'}">${c.nombre || s['Categoría']}</span>
       </div>
       <button class="sos-remove-btn" data-id="${s['ID_Estrategia']}" title="Quitar del kit">
         ${ICONS.heartFilled}
