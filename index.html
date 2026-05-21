@@ -586,7 +586,7 @@
       -webkit-tap-highlight-color: transparent;
     }
     .ep-card:active { transform: scale(0.94); }
-    .ep-card.has-sel { border-color: #4CC2C6; }
+    .ep-card.has-sel { border-width: 1.5px; }
     .ep-card-emoji { font-size: 26px; line-height: 1; }
     .ep-card-name { font-size: 11px; font-weight: 500; color: #777; }
     .ep-card-badge {
@@ -1927,7 +1927,7 @@ function epRenderGrid() {
     const n = epCountForCat(cat);
     const card = document.createElement('button');
     card.className = 'ep-card' + (n > 0 ? ' has-sel' : '');
-    if (n > 0) card.style.background = f.bg;
+    if (n > 0) { card.style.background = f.bg; card.style.borderColor = f.color; }
     const emoji = document.createElement('span');
     emoji.className = 'ep-card-emoji';
     emoji.textContent = cat.emoji;
