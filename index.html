@@ -672,8 +672,9 @@
       background: #4CC2C6; color: white; font-size: 13px; font-weight: 500;
       cursor: pointer; font-family: inherit; transition: opacity 0.15s ease, transform 0.12s ease;
     }
-    .form-submit:hover { opacity: 0.9; }
-    .form-submit:active { transform: scale(0.98); }
+    .form-submit:hover:not(:disabled) { opacity: 0.9; }
+    .form-submit:active:not(:disabled) { transform: scale(0.98); }
+    .form-submit:disabled { background: #c8e8ea; cursor: not-allowed; }
     .form-confirm {
       padding: 12px 14px; border-radius: 10px;
       background: #E8F9FA; border: 0.5px solid #4CC2C6; color: #0D6B6E;
@@ -1039,22 +1040,22 @@
             <div class="info-role">Diseñadora UX · Mujer autista</div>
           </div>
         </div>
-        <div class="info-bio">Me interesa aportar desde mis habilidades herramientas que le sirvan a las personas a mejorar su salud mental. Desde mis propias necesidades fui juntando artefactos que me sirven para regularme en situaciones de crisis, y de ahí nació CalmApp.</div>
+        <div class="info-bio">Me gustaría ayudar a las personas a cuidar su salud mental usando mis habilidades y herramientas. Desde que enfrenté mis propias necesidades, fui recopilando cosas que me ayudan a mantenerme tranquila en momentos difíciles, y de esa experiencia nació CalmApp.</div>
         <div class="info-social-label">Encuéntrame en</div>
         <div class="info-social-links">
-          <a class="info-social-btn" href="#" style="color:#E1306C">
+          <a class="info-social-btn" href="https://www.instagram.com/malefice_art/" target="_blank" rel="noopener">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3"/><line x1="16.5" y1="7.5" x2="16.5" y2="7.501"/></svg>
             Instagram
           </a>
-          <a class="info-social-btn" href="#" style="color:#010101">
+          <a class="info-social-btn" href="https://www.tiktok.com/@malefice_" target="_blank" rel="noopener">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 7.917v4.034a9.948 9.948 0 0 1 -5 -1.951v4.5a6.5 6.5 0 1 1 -8 -6.326v4.326a2.5 2.5 0 1 0 4 2v-11.5h4.083a6.005 6.005 0 0 0 4.917 4.917z"/></svg>
             TikTok
           </a>
-          <a class="info-social-btn" href="#" style="color:#0A66C2">
+          <a class="info-social-btn" href="https://www.linkedin.com/in/magdalena-riquelme/" target="_blank" rel="noopener">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><line x1="8" y1="11" x2="8" y2="16"/><line x1="8" y1="8" x2="8" y2="8.01"/><line x1="12" y1="16" x2="12" y2="11"/><path d="M16 16v-3a2 2 0 0 0 -4 0"/></svg>
             LinkedIn
           </a>
-          <a class="info-social-btn" href="#" style="color:#4CC2C6">
+          <a class="info-social-btn" href="https://malefice.cl/" target="_blank" rel="noopener">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="3.6" y1="9" x2="20.4" y2="9"/><line x1="3.6" y1="15" x2="20.4" y2="15"/><path d="M11.5 3a17 17 0 0 0 0 18"/><path d="M12.5 3a17 17 0 0 1 0 18"/></svg>
             Web
           </a>
@@ -1910,30 +1911,72 @@ function openInfo() {
 
 // Form logic (wired once on init)
 function initInfoForm() {
-  const check = document.getElementById('form-contact-check');
-  const extra = document.getElementById('form-extra');
-  const msg   = document.getElementById('form-msg');
-  const submitArea = document.getElementById('form-submit-area');
-  const btn   = document.getElementById('form-submit');
+  const check   = document.getElementById('form-contact-check');
+  const extra   = document.getElementById('form-extra');
+  const msg     = document.getElementById('form-msg');
+  const nameEl  = document.getElementById('form-name');
+  const contact = document.getElementById('form-contact-val');
+  const btn     = document.getElementById('form-submit');
+  let confirmEl = null;
+
+  function updateSubmitBtn() {
+    const hasMsg = msg.value.trim().length > 0;
+    const contactOk = !check.checked
+      || (nameEl.value.trim().length > 0 && contact.value.trim().length > 0);
+    btn.disabled = !(hasMsg && contactOk);
+  }
+
+  function resetForm() {
+    msg.value = '';
+    check.checked = false;
+    nameEl.value = '';
+    contact.value = '';
+    extra.classList.remove('visible');
+    msg.classList.remove('error');
+    updateSubmitBtn();
+  }
+
+  // Initial state: button disabled
+  updateSubmitBtn();
 
   check.addEventListener('change', () => {
     extra.classList.toggle('visible', check.checked);
+    updateSubmitBtn();
   });
+
+  msg.addEventListener('input', () => {
+    msg.classList.remove('error');
+    updateSubmitBtn();
+  });
+  nameEl.addEventListener('input', updateSubmitBtn);
+  contact.addEventListener('input', updateSubmitBtn);
 
   btn.addEventListener('click', () => {
-    if (!msg.value.trim()) {
-      msg.classList.add('error');
-      msg.focus();
-      return;
+    const bodyParts = [`Mensaje: ${msg.value.trim()}`];
+    if (check.checked) {
+      bodyParts.push(`Nombre: ${nameEl.value.trim()}`);
+      bodyParts.push(`Contacto: ${contact.value.trim()}`);
     }
-    msg.classList.remove('error');
-    const confirm = document.createElement('div');
-    confirm.className = 'form-confirm';
-    confirm.textContent = '¡Gracias por tu mensaje! Lo leeré con cariño 🩵';
-    submitArea.replaceWith(confirm);
-  });
+    const mailtoUrl = `mailto:malefice.design@gmail.com?subject=${encodeURIComponent('Sugerencias para CalmApp')}&body=${encodeURIComponent(bodyParts.join('\n'))}`;
+    window.open(mailtoUrl);
 
-  msg.addEventListener('input', () => msg.classList.remove('error'));
+    // Show confirmation inline above the button
+    if (!confirmEl) {
+      confirmEl = document.createElement('div');
+      confirmEl.className = 'form-confirm';
+      btn.parentElement.insertBefore(confirmEl, btn);
+    }
+    confirmEl.textContent = '¡Gracias por tu mensaje! Lo leeré con cariño 🩵';
+    confirmEl.style.display = 'block';
+    btn.style.display = 'none';
+
+    // Reset after 3s and restore button
+    setTimeout(() => {
+      confirmEl.style.display = 'none';
+      btn.style.display = '';
+      resetForm();
+    }, 3000);
+  });
 }
 
 // ── Nav pill wrapper (centra ícono+label sin que el pill afecte el layout) ───
