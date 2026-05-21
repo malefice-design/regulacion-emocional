@@ -29,6 +29,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Zilla+Slab:wght@600;700&display=swap" rel="stylesheet">
 
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script>emailjs.init('E84hd6XZGsBRckcjq');</script>
+
   <!-- PWA -->
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#4CC2C6">
@@ -659,7 +663,7 @@
       transition: border-color 0.15s ease, background 0.15s ease;
       margin-bottom: 10px; box-sizing: border-box;
     }
-    .form-textarea { resize: vertical; min-height: 80px; }
+    .form-textarea { resize: none; min-height: 80px; overflow: hidden; }
     .form-input:focus, .form-textarea:focus { border-color: #4CC2C6; background: white; }
     .form-input.error, .form-textarea.error { border-color: #e74c3c; }
     .form-checkbox-row { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 12px; cursor: pointer; }
@@ -1919,6 +1923,12 @@ function initInfoForm() {
   const btn     = document.getElementById('form-submit');
   let confirmEl = null;
 
+  // Auto-expand textarea
+  function autoResize() {
+    msg.style.height = 'auto';
+    msg.style.height = msg.scrollHeight + 'px';
+  }
+
   function updateSubmitBtn() {
     const hasMsg = msg.value.trim().length > 0;
     const contactOk = !check.checked
@@ -1928,6 +1938,7 @@ function initInfoForm() {
 
   function resetForm() {
     msg.value = '';
+    msg.style.height = '';
     check.checked = false;
     nameEl.value = '';
     contact.value = '';
@@ -1936,7 +1947,23 @@ function initInfoForm() {
     updateSubmitBtn();
   }
 
-  // Initial state: button disabled
+  function showConfirm(text) {
+    if (!confirmEl) {
+      confirmEl = document.createElement('div');
+      confirmEl.className = 'form-confirm';
+      btn.parentElement.insertBefore(confirmEl, btn);
+    }
+    confirmEl.textContent = text;
+    confirmEl.style.display = 'block';
+    btn.style.display = 'none';
+  }
+
+  function hideConfirm() {
+    if (confirmEl) confirmEl.style.display = 'none';
+    btn.style.display = '';
+  }
+
+  // Initial state
   updateSubmitBtn();
 
   check.addEventListener('change', () => {
@@ -1946,36 +1973,34 @@ function initInfoForm() {
 
   msg.addEventListener('input', () => {
     msg.classList.remove('error');
+    autoResize();
     updateSubmitBtn();
   });
   nameEl.addEventListener('input', updateSubmitBtn);
   contact.addEventListener('input', updateSubmitBtn);
 
   btn.addEventListener('click', () => {
-    const bodyParts = [`Mensaje: ${msg.value.trim()}`];
-    if (check.checked) {
-      bodyParts.push(`Nombre: ${nameEl.value.trim()}`);
-      bodyParts.push(`Contacto: ${contact.value.trim()}`);
-    }
-    const mailtoUrl = `mailto:malefice.design@gmail.com?subject=${encodeURIComponent('Sugerencias para CalmApp')}&body=${encodeURIComponent(bodyParts.join('\n'))}`;
-    window.open(mailtoUrl);
+    btn.disabled = true;
+    btn.textContent = 'Enviando…';
 
-    // Show confirmation inline above the button
-    if (!confirmEl) {
-      confirmEl = document.createElement('div');
-      confirmEl.className = 'form-confirm';
-      btn.parentElement.insertBefore(confirmEl, btn);
-    }
-    confirmEl.textContent = '¡Gracias por tu mensaje! Lo leeré con cariño 🩵';
-    confirmEl.style.display = 'block';
-    btn.style.display = 'none';
+    const templateParams = {
+      mensaje:        msg.value.trim(),
+      contacto_nombre: check.checked ? nameEl.value.trim() : '',
+      contacto_info:   check.checked ? contact.value.trim() : '',
+    };
 
-    // Reset after 3s and restore button
-    setTimeout(() => {
-      confirmEl.style.display = 'none';
-      btn.style.display = '';
-      resetForm();
-    }, 3000);
+    emailjs.send('service_q4bh3ys', 'template_4s72dl4', templateParams)
+      .then(() => {
+        showConfirm('¡Gracias por tu mensaje! Lo leeré con cariño 🩵');
+        resetForm();
+        setTimeout(() => { hideConfirm(); }, 3000);
+      })
+      .catch(() => {
+        showConfirm('Hubo un error al enviar. Intenta de nuevo.');
+        btn.textContent = 'Enviar comentario';
+        btn.disabled = false;
+        setTimeout(() => { hideConfirm(); }, 3000);
+      });
   });
 }
 
