@@ -57,7 +57,7 @@
 
     #app {
       width: 390px;
-      height: 100dvh;
+      height: 100vh; /* JS lo sobreescribe con window.innerHeight para que el teclado no mueva el layout */
       position: relative;
       overflow: hidden;
       background: #f9f8f6;
@@ -1103,6 +1103,17 @@
 </div><!-- #app -->
 
 <script>
+// ── Fijar altura del app para que el teclado iOS no mueva el layout ──────────
+(function () {
+  const app = document.getElementById('app');
+  function setAppHeight() { app.style.height = window.innerHeight + 'px'; }
+  setAppHeight();
+  // Re-calcular solo en cambios de orientación (no en resize por teclado)
+  window.addEventListener('orientationchange', function () {
+    setTimeout(setAppHeight, 300);
+  });
+})();
+
 // ══════════════════════════════════════════════
 //  DATOS DE CATEGORÍAS (embebidos)
 // ══════════════════════════════════════════════
