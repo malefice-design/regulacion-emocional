@@ -1923,10 +1923,10 @@ function initInfoForm() {
   const btn     = document.getElementById('form-submit');
   let confirmEl = null;
 
-  // Auto-expand textarea
+  // Auto-expand textarea (colapsar a 1px fuerza recálculo de scrollHeight en mobile)
   function autoResize() {
-    msg.style.height = 'auto';
-    msg.style.height = msg.scrollHeight + 'px';
+    msg.style.height = '1px';
+    msg.style.height = Math.max(80, msg.scrollHeight) + 'px';
   }
 
   function updateSubmitBtn() {
@@ -1944,6 +1944,7 @@ function initInfoForm() {
     contact.value = '';
     extra.classList.remove('visible');
     msg.classList.remove('error');
+    btn.textContent = 'Enviar comentario';
     updateSubmitBtn();
   }
 
@@ -2011,6 +2012,14 @@ document.querySelectorAll('.nav-item').forEach(item => {
   while (item.firstChild) pill.appendChild(item.firstChild);
   item.appendChild(pill);
 });
+
+// ── visualViewport: evita que el fondo gris asome al ocultar el teclado en iOS
+if (window.visualViewport) {
+  const app = document.getElementById('app');
+  const syncHeight = () => { app.style.height = window.visualViewport.height + 'px'; };
+  window.visualViewport.addEventListener('resize', syncHeight);
+  syncHeight();
+}
 
 // ── Service Worker (PWA) ─────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
