@@ -663,7 +663,7 @@
       transition: border-color 0.15s ease, background 0.15s ease;
       margin-bottom: 10px; box-sizing: border-box;
     }
-    .form-textarea { resize: none; min-height: 80px; overflow: hidden; }
+    .form-textarea { resize: none; overflow: hidden; }
     .form-input:focus, .form-textarea:focus { border-color: #4CC2C6; background: white; }
     .form-input.error, .form-textarea.error { border-color: #e74c3c; }
     .form-checkbox-row { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 12px; cursor: pointer; }
@@ -1923,9 +1923,10 @@ function initInfoForm() {
   const btn     = document.getElementById('form-submit');
   let confirmEl = null;
 
-  // Auto-expand textarea (colapsar a 1px fuerza recálculo de scrollHeight en mobile)
+  // Auto-expand textarea: height:0 colapsa el elemento realmente (sin min-height en CSS)
+  // para que scrollHeight refleje solo el contenido, luego aplicamos mínimo de 80px
   function autoResize() {
-    msg.style.height = '1px';
+    msg.style.height = '0';
     msg.style.height = Math.max(80, msg.scrollHeight) + 'px';
   }
 
@@ -1938,7 +1939,7 @@ function initInfoForm() {
 
   function resetForm() {
     msg.value = '';
-    msg.style.height = '';
+    autoResize();
     check.checked = false;
     nameEl.value = '';
     contact.value = '';
@@ -1965,6 +1966,7 @@ function initInfoForm() {
   }
 
   // Initial state
+  autoResize();
   updateSubmitBtn();
 
   check.addEventListener('change', () => {
