@@ -546,54 +546,178 @@
     .identify-btn-text { font-size: 14px; font-weight: 600; color: #1A7A7E; letter-spacing: -0.2px; }
     .identify-btn-sub { font-size: 11px; color: #2B9CA0; margin-top: 1px; }
 
-    /* ── Identify screen — emotion picker ── */
-    #screen-identify .screen-body { padding-bottom: 110px; }
-    .identify-intro { padding: 4px 18px 20px; font-size: 14px; color: #666; line-height: 1.5; }
-    /* ── Accordion de familia ── */
-    .emotion-section { margin-bottom: 10px; }
-    .familia-toggle {
-      display: flex; align-items: center; justify-content: space-between;
-      width: 100%; padding: 9px 14px; margin: 0 16px; margin-bottom: 10px;
-      width: calc(100% - 32px);
-      background: white; border: 1px solid #e2dfd9; border-radius: 10px;
-      cursor: pointer; text-align: left;
-      transition: border-color 0.15s;
+    /* ── EmotionPicker ─────────────────────────────────────────── */
+    .ep-instruction {
+      font-size: 12px; color: #666; line-height: 1.5;
+      padding: 2px 18px 8px; flex-shrink: 0;
     }
-    .familia-toggle:hover { border-color: #c8c4bc; }
-    .familia-toggle-left { display: flex; align-items: center; gap: 8px; }
-    .familia-toggle-icon { font-size: 18px; line-height: 1; flex-shrink: 0; }
-    .familia-toggle-name { font-size: 12px; font-weight: 600; letter-spacing: 0.1px; }
-    .familia-toggle-chevron { transition: transform 0.2s ease; color: #aaa; flex-shrink: 0; }
-    .familia-toggle.collapsed .familia-toggle-chevron { transform: rotate(-90deg); }
-    .familia-content { overflow: hidden; transition: max-height 0.25s ease; max-height: 2000px; }
-    .familia-content.collapsed { max-height: 0; }
+    .ep-instruction strong { color: #1a1a1a; }
 
-    /* ── Chips de emoción ── */
-    .emotion-group-row { display: flex; flex-wrap: wrap; gap: 7px; padding: 0 16px; margin-bottom: 8px; }
-    .emotion-chip {
-      display: inline-flex; align-items: center; gap: 0;
-      padding: 7px 13px; border-radius: 20px; border: 1.5px solid;
-      font-size: 13px; font-weight: 500; cursor: pointer;
-      background: white;
-      transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease, gap 0.12s ease;
-      user-select: none; -webkit-user-select: none;
-      white-space: nowrap;
+    .ep-search-wrap { padding: 0 14px 8px; flex-shrink: 0; }
+    .ep-search-box {
+      display: flex; align-items: center; gap: 8px;
+      background: white; border: 0.5px solid #ddd; border-radius: 12px;
+      padding: 9px 12px; transition: border-color 0.15s;
     }
-    .emotion-chip:active { transform: scale(0.93); }
-    .emotion-chip-check {
-      width: 0; height: 13px; overflow: hidden; flex-shrink: 0;
-      transition: width 0.12s ease, margin-right 0.12s ease;
-      margin-right: 0;
+    .ep-search-box:focus-within { border-color: #4CC2C6; }
+    #ep-search {
+      flex: 1; border: none; outline: none; background: transparent;
+      font-size: 13px; font-family: inherit; color: #1a1a1a;
+      -webkit-appearance: none;
     }
-    .emotion-chip.selected { gap: 5px; }
-    .emotion-chip.selected .emotion-chip-check { width: 13px; margin-right: 0; }
-    .emotion-chip.nivel-3 { font-weight: 400; }
-    .identify-float {
-      position: absolute; bottom: 0; left: 0; right: 0;
-      padding: 24px 16px 32px;
-      background: linear-gradient(to bottom, transparent, #f9f8f6 40%);
-      pointer-events: none;
+    #ep-search::placeholder { color: #bbb; }
+    #ep-search::-webkit-search-cancel-button { display: none; }
+    .ep-search-clear {
+      background: none; border: none; cursor: pointer; color: #bbb;
+      padding: 0; line-height: 1; display: flex;
     }
+
+    /* Grid */
+    .ep-grid {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px; padding: 0 14px 14px;
+    }
+    .ep-card {
+      aspect-ratio: 1 / 1.1;
+      background: white; border: 0.5px solid #e8e8e8; border-radius: 16px;
+      cursor: pointer; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: 4px;
+      position: relative; transition: transform 0.12s, border-color 0.12s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .ep-card:active { transform: scale(0.94); }
+    .ep-card.has-sel { border-color: #4CC2C6; }
+    .ep-card-emoji { font-size: 26px; line-height: 1; }
+    .ep-card-name { font-size: 11px; font-weight: 500; color: #777; }
+    .ep-card-badge {
+      position: absolute; top: 6px; right: 6px;
+      background: #4CC2C6; color: white;
+      border-radius: 10px; padding: 1px 5px;
+      font-size: 10px; font-weight: 700; line-height: 1.4;
+    }
+
+    /* Bottom sheet */
+    .ep-backdrop {
+      position: absolute; inset: 0; z-index: 10;
+      background: rgba(0,0,0,0.12);
+    }
+    .ep-sheet {
+      position: absolute; left: 0; right: 0; bottom: 0; z-index: 11;
+      background: white; border-radius: 20px 20px 0 0;
+      border-top: 0.5px solid #e2dfd9;
+      box-shadow: 0 -4px 24px rgba(0,0,0,0.08);
+      max-height: 72%; display: flex; flex-direction: column;
+      transform: translateY(100%);
+      transition: transform 0.28s cubic-bezier(0.32,0.72,0,1);
+    }
+    .ep-sheet.open { transform: translateY(0); }
+    .ep-sheet-handle {
+      width: 36px; height: 4px; background: #e0e0e0; border-radius: 4px;
+      align-self: center; margin: 10px 0 4px; flex-shrink: 0;
+    }
+    .ep-sheet-header {
+      display: flex; align-items: center; gap: 8px;
+      padding: 4px 16px 10px; flex-shrink: 0;
+      border-bottom: 0.5px solid #f0f0f0;
+    }
+    .ep-sheet-emoji { font-size: 20px; }
+    .ep-sheet-title { font-size: 15px; font-weight: 500; flex: 1; }
+    .ep-sheet-close {
+      background: none; border: none; cursor: pointer; color: #999;
+      font-size: 12px; padding: 4px 8px; border-radius: 8px;
+      font-family: inherit;
+    }
+    .ep-sheet-hint {
+      font-size: 11px; color: #bbb; padding: 8px 16px 6px; flex-shrink: 0;
+    }
+    .ep-sheet-body {
+      overflow-y: auto; padding: 4px 16px 16px;
+      display: flex; flex-direction: column; gap: 10px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .ep-row {
+      display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+    }
+    .ep-arrow { font-size: 11px; color: #ccc; flex-shrink: 0; }
+
+    /* L2 chip (con indicador ○/● ) */
+    .ep-l2 {
+      display: inline-flex; align-items: center; gap: 5px;
+      padding: 5px 12px 5px 8px; border: 0.5px solid #ddd;
+      border-radius: 20px; cursor: pointer; font-family: inherit;
+      font-size: 12px; font-weight: 500; color: #1a1a1a; background: white;
+      transition: background 0.1s, border-color 0.1s, color 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .ep-l2-circle {
+      width: 13px; height: 13px; border-radius: 50%; flex-shrink: 0;
+      border: 1.5px solid #ccc; display: inline-flex;
+      align-items: center; justify-content: center;
+      font-size: 8px; color: white; line-height: 1;
+      transition: background 0.1s, border-color 0.1s;
+    }
+
+    /* L3 chip */
+    .ep-l3 {
+      display: inline-flex; align-items: center;
+      padding: 4px 10px; background: white; border: 0.5px solid #ddd;
+      border-radius: 16px; cursor: pointer; font-family: inherit;
+      font-size: 11px; color: #666; font-weight: 400;
+      transition: background 0.1s, border-color 0.1s, color 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Search results */
+    .ep-results { padding: 0 14px 14px; display: flex; flex-direction: column; gap: 14px; }
+    .ep-results-count { font-size: 11px; color: #bbb; }
+    .ep-cat-header {
+      display: flex; align-items: center; gap: 6px; margin-bottom: 6px;
+    }
+    .ep-cat-header-label { font-size: 12px; font-weight: 500; }
+    .ep-cat-header-line {
+      flex: 1; height: 1px;
+      background: repeating-linear-gradient(90deg,#ddd 0,#ddd 3px,transparent 3px,transparent 7px);
+    }
+    .ep-chips-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+
+    /* Empty state */
+    .ep-empty {
+      padding: 28px 20px 16px; text-align: center;
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+    }
+    .ep-empty-title { font-size: 17px; font-weight: 500; color: #1a1a1a; line-height: 1.3; }
+    .ep-empty-sub { font-size: 12px; color: #999; max-width: 260px; line-height: 1.5; }
+    .ep-request-btn {
+      padding: 10px 18px; background: #4CC2C6; color: white;
+      border: none; border-radius: 12px; font-size: 13px; font-weight: 600;
+      cursor: pointer; font-family: inherit; transition: opacity 0.15s;
+    }
+    .ep-request-btn:hover { opacity: 0.9; }
+    .ep-request-sent {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 9px 14px; background: #E8F9FA; border: 0.5px solid #4CC2C6;
+      border-radius: 12px; color: #0D6B6E; font-size: 13px; font-weight: 500;
+    }
+    .ep-empty-note { font-size: 11px; color: #ccc; }
+
+    /* Continue bar */
+    .ep-continue-bar {
+      flex-shrink: 0; background: white; border-top: 0.5px solid #e2dfd9;
+      padding: 10px 16px 18px; display: flex; align-items: center; gap: 10px;
+    }
+    .ep-limpiar-btn {
+      background: none; border: 0.5px solid #ddd; border-radius: 10px;
+      padding: 10px 14px; font-size: 12px; color: #888; cursor: pointer;
+      font-family: inherit; white-space: nowrap; flex-shrink: 0;
+    }
+    .ep-continue-btn {
+      flex: 1; padding: 12px; background: #4CC2C6; color: white; border: none;
+      border-radius: 12px; font-size: 13px; font-weight: 600; cursor: pointer;
+      font-family: inherit; transition: opacity 0.15s;
+    }
+    .ep-continue-btn:disabled { background: #c8e8ea; cursor: not-allowed; }
+    .ep-continue-btn:not(:disabled):hover { opacity: 0.9; }
+
     .identify-clear-btn {
       background: none; border: none; cursor: pointer;
       font-size: 13px; font-weight: 500; color: #4CC2C6;
@@ -604,18 +728,6 @@
     }
     .identify-clear-btn.visible { visibility: visible; opacity: 1; }
     .identify-clear-btn:hover { opacity: 0.7; }
-    .identify-continue-btn {
-      width: 100%; display: flex; align-items: center; justify-content: center;
-      padding: 15px 20px; border-radius: 14px; border: none;
-      background: #4CC2C6; color: white;
-      font-size: 15px; font-weight: 600; letter-spacing: -0.2px;
-      cursor: pointer; pointer-events: all;
-      transition: transform 0.12s ease, background 0.15s ease;
-      box-shadow: 0 4px 18px rgba(76,194,198,0.28);
-    }
-    .identify-continue-btn:disabled { opacity: 0.38; pointer-events: none; box-shadow: none; }
-    .identify-continue-btn:not(:disabled):hover { background: #3AABB0; transform: scale(1.01); }
-    .identify-continue-btn:not(:disabled):active { transform: scale(0.97); }
 
     /* ── Suggest screen ── */
     .suggest-hero { margin: 8px 16px 16px; border-radius: 16px; padding: 18px; }
@@ -958,6 +1070,7 @@
        PANTALLA 5 — IDENTIFICAR EMOCIÓN
   ════════════════════════════════════════ -->
   <div id="screen-identify" class="screen">
+    <!-- Top nav — keep existing structure, same IDs -->
     <div class="top-nav">
       <button class="btn-back" id="btn-back-identify">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
@@ -965,12 +1078,36 @@
       <span class="top-nav-title">¿Qué emoción sientes?</span>
       <button class="identify-clear-btn" id="identify-clear">Limpiar</button>
     </div>
-    <div class="screen-body">
-      <p class="identify-intro">Selecciona todo lo que reconoces en ti ahora mismo. Puedes elegir varias.</p>
-      <div id="emotion-sections"></div>
+
+    <!-- Instrucción -->
+    <p class="ep-instruction">Toca <strong>cualquier emoción</strong> que reconozcas — tanto las generales como sus matices. Puedes elegir varias.</p>
+
+    <!-- Buscador -->
+    <div class="ep-search-wrap">
+      <div class="ep-search-box" id="ep-search-box">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="ep-search" type="search" placeholder="busca cualquier emoción…" autocomplete="off" autocorrect="off" spellcheck="false">
+        <button class="ep-search-clear" id="ep-search-clear" hidden>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </button>
+      </div>
     </div>
-    <div class="identify-float">
-      <button class="identify-continue-btn" id="identify-continue" disabled>Continuar</button>
+
+    <!-- Cuerpo principal (grid o resultados) -->
+    <div class="screen-body" id="ep-body"></div>
+
+    <!-- Backdrop del bottom sheet -->
+    <div class="ep-backdrop" id="ep-backdrop" hidden></div>
+
+    <!-- Bottom sheet -->
+    <div class="ep-sheet" id="ep-sheet">
+      <!-- Renderizado por JS -->
+    </div>
+
+    <!-- Barra continue -->
+    <div class="ep-continue-bar">
+      <button class="ep-limpiar-btn" id="ep-limpiar" hidden>Limpiar</button>
+      <button class="ep-continue-btn" id="ep-continue" disabled>Continuar</button>
     </div>
   </div>
 
@@ -1649,109 +1786,325 @@ function closeExplorar() {
 }
 
 // ══════════════════════════════════════════════
-//  IDENTIFICAR EMOCIÓN
+//  EMOTION PICKER — datos + lógica
 // ══════════════════════════════════════════════
-function chipHTML(item, f) {
-  const sel = selectedEmotions.has(item.key);
-  const isN3 = item.nivel === 3;
-  const bg    = sel ? f.bg : 'white';
-  const color = f.color;
-  const border = f.color + (sel ? 'aa' : '55');
-  return `<div class="emotion-chip${isN3 ? ' nivel-3' : ''}${sel ? ' selected' : ''}"
-    data-key="${item.key}" data-familia="${item.familia}"
-    style="background:${bg};color:${color};border-color:${border}">
-    <svg class="emotion-chip-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-      <polyline points="20 6 9 17 4 12"/>
-    </svg>
-    ${item.key}
-  </div>`;
+
+// Estructura de 3 niveles derivada de EMOCIONES existente
+const EMOTION_CATS = FAMILIA_ORDER.map(familia => {
+  const f = FAMILIAS[familia];
+  const l2s = EMOCIONES.filter(e => e.familia === familia && e.nivel === 2);
+  return {
+    id: familia,
+    familia,
+    label: familia,
+    emoji: f.icon,
+    children: l2s.map(l2 => ({
+      label: l2.key,
+      children: EMOCIONES
+        .filter(e => e.familia === familia && e.nivel === 3 && e.parent === l2.key)
+        .map(e => e.key),
+    })),
+  };
+});
+
+// Índice plano para búsqueda
+const EMOTION_FLAT = (() => {
+  const out = [];
+  EMOTION_CATS.forEach(cat => {
+    cat.children.forEach(l2 => {
+      out.push({ key: l2.label, label: l2.label, kind: 'l2', cat, l2 });
+      l2.children.forEach(l3 => {
+        out.push({ key: `${l2.label}::${l3}`, label: l3, kind: 'l3', cat, l2 });
+      });
+    });
+  });
+  return out;
+})();
+
+// Búsqueda normalizada (ignora tildes y mayúsculas)
+function epNorm(s) {
+  return s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+}
+function epSearch(q) {
+  const n = epNorm(q.trim());
+  if (!n) return [];
+  return EMOTION_FLAT.filter(it => epNorm(it.label).includes(n));
+}
+function epGroupResults(items) {
+  const m = new Map();
+  items.forEach(it => {
+    if (!m.has(it.cat.id)) m.set(it.cat.id, { cat: it.cat, items: [] });
+    m.get(it.cat.id).items.push(it);
+  });
+  return [...m.values()];
+}
+function epCountForCat(cat) {
+  let n = 0;
+  cat.children.forEach(l2 => {
+    if (selectedEmotions.has(l2.label)) n++;
+    l2.children.forEach(l3 => { if (selectedEmotions.has(`${l2.label}::${l3}`)) n++; });
+  });
+  return n;
+}
+
+// Estado del picker
+let epOpenCat = null;
+let epQuery = '';
+let epRequestSent = false;
+let epInitialized = false;
+
+function epToggle(key) {
+  if (selectedEmotions.has(key)) selectedEmotions.delete(key);
+  else selectedEmotions.add(key);
+  epRender();
+  epUpdateBar();
+}
+
+function epClearAll() {
+  selectedEmotions.clear();
+  epRender();
+  epUpdateBar();
+}
+
+function epUpdateBar() {
+  const n = selectedEmotions.size;
+  const continueBtn = document.getElementById('ep-continue');
+  const limpiarBtn  = document.getElementById('ep-limpiar');
+  const clearTopBtn = document.getElementById('identify-clear');
+  continueBtn.disabled = n === 0;
+  continueBtn.textContent = n > 0
+    ? `Continuar · ${n} seleccionada${n !== 1 ? 's' : ''}`
+    : 'Continuar';
+  if (limpiarBtn)  limpiarBtn.hidden = n === 0;
+  if (clearTopBtn) clearTopBtn.classList.toggle('visible', n > 0);
+}
+
+// ── Chip builders ────────────────────────────────────────────
+function epMakeL2(l2, cat) {
+  const f = FAMILIAS[cat.familia];
+  const sel = selectedEmotions.has(l2.label);
+  const btn = document.createElement('button');
+  btn.className = 'ep-l2' + (sel ? ' sel' : '');
+  if (sel) {
+    btn.style.background = f.bg;
+    btn.style.borderColor = f.color + '88';
+    btn.style.color = f.color;
+  }
+  const circle = document.createElement('span');
+  circle.className = 'ep-l2-circle';
+  if (sel) { circle.style.background = f.color; circle.style.borderColor = f.color; circle.textContent = '✓'; }
+  btn.appendChild(circle);
+  btn.appendChild(document.createTextNode(l2.label));
+  btn.addEventListener('click', () => epToggle(l2.label));
+  return btn;
+}
+function epMakeL3(l3, l2label, cat) {
+  const f = FAMILIAS[cat.familia];
+  const key = `${l2label}::${l3}`;
+  const sel = selectedEmotions.has(key);
+  const btn = document.createElement('button');
+  btn.className = 'ep-l3' + (sel ? ' sel' : '');
+  if (sel) { btn.style.background = f.bg; btn.style.borderColor = f.color + '88'; btn.style.color = f.color; btn.style.fontWeight = '500'; }
+  btn.textContent = l3;
+  btn.addEventListener('click', () => epToggle(key));
+  return btn;
+}
+
+// ── Render functions ─────────────────────────────────────────
+function epRender() {
+  if (epQuery.trim()) epRenderSearch(epQuery);
+  else epRenderGrid();
+  if (epOpenCat) epRenderSheet(epOpenCat);
+}
+
+function epRenderGrid() {
+  const body = document.getElementById('ep-body');
+  const grid = document.createElement('div');
+  grid.className = 'ep-grid';
+  EMOTION_CATS.forEach(cat => {
+    const f = FAMILIAS[cat.familia];
+    const n = epCountForCat(cat);
+    const card = document.createElement('button');
+    card.className = 'ep-card' + (n > 0 ? ' has-sel' : '');
+    if (n > 0) card.style.background = f.bg;
+    const emoji = document.createElement('span');
+    emoji.className = 'ep-card-emoji';
+    emoji.textContent = cat.emoji;
+    const name = document.createElement('span');
+    name.className = 'ep-card-name';
+    name.textContent = cat.label;
+    name.style.color = n > 0 ? f.color : '#777';
+    card.appendChild(emoji);
+    card.appendChild(name);
+    if (n > 0) {
+      const badge = document.createElement('span');
+      badge.className = 'ep-card-badge';
+      badge.style.background = f.color;
+      badge.textContent = n;
+      card.appendChild(badge);
+    }
+    card.addEventListener('click', () => epOpenSheet(cat.id));
+    grid.appendChild(card);
+  });
+  body.innerHTML = '';
+  body.appendChild(grid);
+}
+
+function epRenderSearch(q) {
+  const body = document.getElementById('ep-body');
+  const results = epSearch(q);
+  const grouped = epGroupResults(results);
+  const wrap = document.createElement('div');
+  wrap.className = 'ep-results';
+  const count = document.createElement('div');
+  count.className = 'ep-results-count';
+  count.textContent = `${results.length} resultado${results.length !== 1 ? 's' : ''} para "${q}"`;
+  wrap.appendChild(count);
+  if (grouped.length === 0) {
+    const empty = document.createElement('div');
+    empty.className = 'ep-empty';
+    const title = document.createElement('div');
+    title.className = 'ep-empty-title';
+    title.textContent = `No encontramos "${q}"`;
+    const sub = document.createElement('div');
+    sub.className = 'ep-empty-sub';
+    sub.textContent = 'Si crees que esta emoción debería estar en CalmApp, cuéntanos y la revisamos.';
+    empty.appendChild(title);
+    empty.appendChild(sub);
+    if (epRequestSent) {
+      const sent = document.createElement('div');
+      sent.className = 'ep-request-sent';
+      sent.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Solicitud enviada`;
+      empty.appendChild(sent);
+    } else {
+      const reqBtn = document.createElement('button');
+      reqBtn.className = 'ep-request-btn';
+      reqBtn.textContent = `+ Solicitar agregar "${q}"`;
+      reqBtn.addEventListener('click', () => {
+        epRequestSent = true;
+        emailjs.send('service_q4bh3ys', 'template_4s72dl4', {
+          mensaje: `Solicitud de agregar emoción: "${q}"`,
+          contacto_nombre: '', contacto_info: '',
+        }).catch(() => {});
+        epRenderSearch(q);
+      });
+      const note = document.createElement('div');
+      note.className = 'ep-empty-note';
+      note.textContent = '(envía un correo al equipo)';
+      empty.appendChild(reqBtn);
+      empty.appendChild(note);
+    }
+    wrap.appendChild(empty);
+  } else {
+    grouped.forEach(({ cat, items }) => {
+      const f = FAMILIAS[cat.familia];
+      const section = document.createElement('div');
+      const header = document.createElement('div');
+      header.className = 'ep-cat-header';
+      header.innerHTML = `<span style="font-size:15px">${cat.emoji}</span><span class="ep-cat-header-label" style="color:${f.color}">${cat.label}</span><span class="ep-cat-header-line"></span>`;
+      const chips = document.createElement('div');
+      chips.className = 'ep-chips-wrap';
+      items.forEach(it => {
+        chips.appendChild(it.kind === 'l2' ? epMakeL2(it.l2, cat) : epMakeL3(it.label, it.l2.label, cat));
+      });
+      section.appendChild(header);
+      section.appendChild(chips);
+      wrap.appendChild(section);
+    });
+  }
+  body.innerHTML = '';
+  body.appendChild(wrap);
+}
+
+function epRenderSheet(catId) {
+  const cat = EMOTION_CATS.find(c => c.id === catId);
+  if (!cat) return;
+  const f = FAMILIAS[cat.familia];
+  const sheet = document.getElementById('ep-sheet');
+  sheet.innerHTML = `
+    <div class="ep-sheet-handle"></div>
+    <div class="ep-sheet-header">
+      <span class="ep-sheet-emoji">${cat.emoji}</span>
+      <span class="ep-sheet-title" style="color:${f.color}">${cat.label}</span>
+      <button class="ep-sheet-close" id="ep-sheet-close-btn">cerrar ✕</button>
+    </div>
+    <div class="ep-sheet-hint">○ general &nbsp;·&nbsp; más específico →</div>
+  `;
+  const body = document.createElement('div');
+  body.className = 'ep-sheet-body';
+  cat.children.forEach(l2 => {
+    const row = document.createElement('div');
+    row.className = 'ep-row';
+    row.appendChild(epMakeL2(l2, cat));
+    if (l2.children.length) {
+      const arrow = document.createElement('span');
+      arrow.className = 'ep-arrow';
+      arrow.textContent = '→';
+      row.appendChild(arrow);
+      l2.children.forEach(l3 => row.appendChild(epMakeL3(l3, l2.label, cat)));
+    }
+    body.appendChild(row);
+  });
+  sheet.appendChild(body);
+  document.getElementById('ep-sheet-close-btn').addEventListener('click', epCloseSheet);
+}
+
+function epOpenSheet(catId) {
+  epOpenCat = catId;
+  const backdrop = document.getElementById('ep-backdrop');
+  const sheet    = document.getElementById('ep-sheet');
+  backdrop.hidden = false;
+  epRenderSheet(catId);
+  requestAnimationFrame(() => sheet.classList.add('open'));
+}
+
+function epCloseSheet() {
+  const sheet    = document.getElementById('ep-sheet');
+  const backdrop = document.getElementById('ep-backdrop');
+  sheet.classList.remove('open');
+  setTimeout(() => {
+    backdrop.hidden = true;
+    epOpenCat = null;
+  }, 280);
 }
 
 function openIdentify() {
-  const container = document.getElementById('emotion-sections');
-  container.innerHTML = FAMILIA_ORDER.map(fam => {
-    const f = FAMILIAS[fam];
-    const emociones2 = EMOCIONES.filter(e => e.familia === fam && e.nivel === 2);
-    // Cada nivel-2 + sus nivel-3 en la misma fila
-    const rows = emociones2.map(em => {
-      const sents = EMOCIONES.filter(s => s.familia === fam && s.nivel === 3 && s.parent === em.key);
-      const chips = [em, ...sents].map(item => chipHTML(item, f)).join('');
-      return `<div class="emotion-group-row">${chips}</div>`;
-    }).join('');
-
-    const chevron = `<svg class="familia-toggle-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>`;
-
-    return `
-    <div class="emotion-section">
-      <button class="familia-toggle" data-familia="${fam}" aria-expanded="true">
-        <div class="familia-toggle-left">
-          <span class="familia-toggle-icon">${f.icon}</span>
-          <span class="familia-toggle-name" style="color:${f.color}">${fam}</span>
-        </div>
-        ${chevron}
-      </button>
-      <div class="familia-content">${rows}</div>
-    </div>`;
-  }).join('');
-
-  // Accordion toggles
-  container.querySelectorAll('.familia-toggle').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const content = btn.nextElementSibling;
-      const collapsed = content.classList.toggle('collapsed');
-      btn.classList.toggle('collapsed', collapsed);
-      btn.setAttribute('aria-expanded', !collapsed);
+  if (!epInitialized) {
+    epInitialized = true;
+    document.getElementById('ep-search').addEventListener('input', e => {
+      const old = epQuery;
+      epQuery = e.target.value;
+      if (epQuery !== old) epRequestSent = false;
+      document.getElementById('ep-search-clear').hidden = !epQuery;
+      epRender();
     });
-  });
-
-  // Chip clicks
-  container.querySelectorAll('.emotion-chip').forEach(chip => {
-    chip.addEventListener('click', () => {
-      const key = chip.dataset.key;
-      const f = FAMILIAS[chip.dataset.familia];
-      if (selectedEmotions.has(key)) {
-        selectedEmotions.delete(key);
-        chip.classList.remove('selected');
-        chip.style.background = 'white';
-        chip.style.color = f.color;
-        chip.style.borderColor = f.color + '55';
-      } else {
-        selectedEmotions.add(key);
-        chip.classList.add('selected');
-        chip.style.background = f.bg;
-        chip.style.color = f.color;
-        chip.style.borderColor = f.color + 'aa';
-      }
-      updateContinueBtn();
+    document.getElementById('ep-search-clear').addEventListener('click', () => {
+      epQuery = '';
+      document.getElementById('ep-search').value = '';
+      document.getElementById('ep-search-clear').hidden = true;
+      epRender();
     });
-  });
-
-  // Clear button
-  document.getElementById('identify-clear').addEventListener('click', () => {
-    selectedEmotions.clear();
-    container.querySelectorAll('.emotion-chip.selected').forEach(chip => {
-      const f = FAMILIAS[chip.dataset.familia];
-      chip.classList.remove('selected');
-      chip.style.background = 'white';
-      chip.style.color = f.color;
-      chip.style.borderColor = f.color + '55';
-    });
-    updateContinueBtn();
-  });
-
-  updateContinueBtn();
+    document.getElementById('ep-backdrop').addEventListener('click', epCloseSheet);
+    document.getElementById('ep-continue').addEventListener('click', openSuggest);
+    document.getElementById('ep-limpiar').addEventListener('click', epClearAll);
+    document.getElementById('identify-clear').addEventListener('click', epClearAll);
+  }
+  // Reset search state (keep selections between navigations)
+  epQuery = '';
+  epRequestSent = false;
+  const si = document.getElementById('ep-search');
+  if (si) { si.value = ''; }
+  const sc = document.getElementById('ep-search-clear');
+  if (sc) sc.hidden = true;
+  // Close sheet if open
+  if (epOpenCat) {
+    document.getElementById('ep-sheet').classList.remove('open');
+    document.getElementById('ep-backdrop').hidden = true;
+    epOpenCat = null;
+  }
+  epRender();
+  epUpdateBar();
   showScreen('screen-identify');
-}
-
-function updateContinueBtn() {
-  const btn = document.getElementById('identify-continue');
-  const clearBtn = document.getElementById('identify-clear');
-  const n = selectedEmotions.size;
-  btn.disabled = n === 0;
-  btn.textContent = n > 0
-    ? `Continuar · ${n} seleccionada${n !== 1 ? 's' : ''}`
-    : 'Continuar';
-  if (clearBtn) clearBtn.classList.toggle('visible', n > 0);
 }
 
 // ══════════════════════════════════════════════
@@ -1759,8 +2112,10 @@ function updateContinueBtn() {
 // ══════════════════════════════════════════════
 function computeSuggestions() {
   const tally = {};
-  EMOCIONES.filter(e => selectedEmotions.has(e.key)).forEach(e => {
-    e.cats.forEach(cat => { tally[cat] = (tally[cat] || 0) + 1; });
+  selectedEmotions.forEach(key => {
+    const emoKey = key.includes('::') ? key.split('::')[1] : key;
+    const entry = EMOCIONES.find(e => e.key === emoKey);
+    if (entry) entry.cats.forEach(cat => { tally[cat] = (tally[cat] || 0) + 1; });
   });
   return Object.entries(tally)
     .sort((a, b) => b[1] - a[1])
@@ -1772,10 +2127,11 @@ function openSuggest() {
   const maxCount = suggestions[0]?.count || 1;
 
   const hero = document.getElementById('suggest-hero');
-  const tags = Array.from(selectedEmotions).map(emocion => {
-    const entry = EMOCIONES.find(e => e.key === emocion);
+  const tags = Array.from(selectedEmotions).map(key => {
+    const emoKey = key.includes('::') ? key.split('::')[1] : key;
+    const entry = EMOCIONES.find(e => e.key === emoKey);
     const f = FAMILIAS[entry?.familia] || {};
-    return `<span class="suggest-emotion-tag" style="background:${f.bg || 'rgba(255,255,255,0.25)'};color:${f.color || 'white'}">${emocion}</span>`;
+    return `<span class="suggest-emotion-tag" style="background:${f.bg || 'rgba(76,194,198,0.15)'};color:${f.color || '#555'}">${emoKey}</span>`;
   }).join('');
   hero.style.background = 'white';
   hero.style.border = '0.5px solid #e2dfd9';
@@ -1892,7 +2248,6 @@ function init() {
   document.getElementById('btn-back-sos').addEventListener('click', () => showScreen('screen-home'));
   document.getElementById('btn-back-identify').addEventListener('click', () => showScreen('screen-home'));
   document.getElementById('btn-back-suggest').addEventListener('click', openIdentify);
-  document.getElementById('identify-continue').addEventListener('click', openSuggest);
 
   // Nav buttons — Inicio
   ['home-nav-inicio','list-nav-inicio','detail-nav-inicio','sos-nav-inicio','suggest-nav-inicio','info-nav-inicio'].forEach(id => {
