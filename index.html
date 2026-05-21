@@ -47,7 +47,7 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      background: #dddbd7;
+      background: #f9f8f6; /* mismo tono que el app: el "gris" al ocultar teclado en iOS es invisible */
       display: flex;
       justify-content: center;
       align-items: flex-start;
@@ -2015,13 +2015,6 @@ document.querySelectorAll('.nav-item').forEach(item => {
   item.appendChild(pill);
 });
 
-// ── visualViewport: evita que el fondo gris asome al ocultar el teclado en iOS
-if (window.visualViewport) {
-  const app = document.getElementById('app');
-  const syncHeight = () => { app.style.height = window.visualViewport.height + 'px'; };
-  window.visualViewport.addEventListener('resize', syncHeight);
-  syncHeight();
-}
 
 // ── Service Worker (PWA) ─────────────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
