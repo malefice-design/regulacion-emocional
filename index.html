@@ -842,7 +842,7 @@
        PANTALLA 1 — INICIO
   ════════════════════════════════════════ -->
   <div id="screen-home" class="screen active">
-    <div class="home-banner">
+    <div class="home-banner" style="display:none">
       <svg class="home-banner-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       <span class="home-banner-text">Material original de <b>Psic. Alexandra Barroso</b>.<br><span class="home-banner-link" id="banner-info-link">Ver más información →</span></span>
     </div>
@@ -1154,32 +1154,14 @@
     <div class="screen-body">
       <div class="info-title">Información</div>
 
-      <!-- Bloque 1: Aviso y agradecimiento -->
-      <div class="info-block info-block-red">
-        <div class="info-block-label">Aviso y agradecimiento</div>
-        <div class="info-block-text">Este prototipo de herramienta de autorregulación emocional se inspira en un contenido previo de la <b>Psic. Alexandra Barroso</b>, Máster en Neuropsicología y Maestrante en TCC. La idea y la organización original de las categorías de regulación emocional nacen de su material.</div>
-        <div class="info-block-text">Para ver su material original y adquirir sus recursos puedes visitar sus redes sociales y página web.<br><br><a href="https://hablandocontigopsic.com/producto/%f0%9f%a7%a0%e2%9c%a8-rueda-de-regulacion-emocional-regalito-%f0%9f%8e%81/" target="_blank" rel="noopener">Clic aquí para adquirir su guía de Regulación Emocional →</a></div>
-        <div class="info-social-label" style="margin-top:14px;color:#A32D2D">Redes sociales</div>
-        <div class="info-social-links">
-          <a class="info-social-btn" href="https://www.instagram.com/hablando_contigo_psic/" target="_blank" rel="noopener">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3"/><line x1="16.5" y1="7.5" x2="16.5" y2="7.501"/></svg>
-            Instagram
-          </a>
-          <a class="info-social-btn" href="https://hablandocontigopsic.com/" target="_blank" rel="noopener">
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="3.6" y1="9" x2="20.4" y2="9"/><line x1="3.6" y1="15" x2="20.4" y2="15"/><path d="M11.5 3a17 17 0 0 0 0 18"/><path d="M12.5 3a17 17 0 0 1 0 18"/></svg>
-            Web
-          </a>
-        </div>
-      </div>
-
-      <!-- Bloque 2: El proyecto -->
+      <!-- Bloque 1: El proyecto -->
       <div class="info-block info-block-teal">
         <div class="info-block-label">El proyecto</div>
         <div class="info-block-heading">CalmApp</div>
         <div class="info-block-text">Una guía de regulación emocional para identificar lo que sientes y encontrar estrategias para regularte, paso a paso.<br><br>Este proyecto es de uso personal, sin fines de lucro.</div>
       </div>
 
-      <!-- Bloque 3: Sobre mí -->
+      <!-- Bloque 2: Sobre mí -->
       <div class="info-block">
         <div class="info-avatar-row">
           <img class="info-avatar" src="img/icon_grad.svg" alt="Magdalena Riquelme"
@@ -1212,16 +1194,45 @@
         </div>
       </div>
 
-      <!-- Formulario oculto (elementos necesarios para initInfoForm) -->
-      <div style="display:none">
-        <textarea id="form-msg"></textarea>
-        <input type="checkbox" id="form-contact-check">
-        <div id="form-extra">
-          <input id="form-name" type="text">
-          <input id="form-contact-val" type="text">
+      <!-- Bloque 3: Formulario -->
+      <div class="info-block">
+        <div class="form-heading">¿Tienes algún comentario?</div>
+        <div class="form-sub">Puedes escribirme si algo no funciona o si quieres dejar un mensaje.</div>
+        <label class="form-label" for="form-msg">Mensaje</label>
+        <textarea id="form-msg" class="form-textarea" placeholder="Escribe tu mensaje aquí…" rows="3"></textarea>
+        <label class="form-checkbox-row" for="form-contact-check">
+          <input type="checkbox" id="form-contact-check">
+          <span class="form-checkbox-label">Quiero que me respondas (dejar datos de contacto)</span>
+        </label>
+        <div id="form-extra" class="form-extra">
+          <label class="form-label" for="form-name">Nombre</label>
+          <input id="form-name" class="form-input" type="text" placeholder="Tu nombre">
+          <label class="form-label" for="form-contact-val" style="margin-top:8px">Cómo contactarte</label>
+          <input id="form-contact-val" class="form-input" type="text" placeholder="Email, Instagram, etc.">
         </div>
-        <div id="form-submit-area"><button id="form-submit"></button></div>
+        <div id="form-submit-area">
+          <button id="form-submit" class="form-submit" disabled>Enviar comentario</button>
+        </div>
       </div>
+
+      <!-- Bloque 4: Aviso y agradecimiento (neutro) -->
+      <div class="info-block">
+        <div class="info-block-label">Aviso y agradecimiento</div>
+        <div class="info-block-text">Este prototipo de herramienta de autorregulación emocional se inspira en un contenido previo de la <b>Psic. Alexandra Barroso</b>, Máster en Neuropsicología y Maestrante en TCC. La idea y la organización original de las categorías de regulación emocional nacen de su material.</div>
+        <div class="info-block-text">Para ver su material original y adquirir sus recursos puedes visitar sus redes sociales y página web.<br><br><a href="https://hablandocontigopsic.com/producto/%f0%9f%a7%a0%e2%9c%a8-rueda-de-regulacion-emocional-regalito-%f0%9f%8e%81/" target="_blank" rel="noopener">Clic aquí para adquirir su guía de Regulación Emocional →</a></div>
+        <div class="info-social-label" style="margin-top:14px">Redes sociales</div>
+        <div class="info-social-links">
+          <a class="info-social-btn" href="https://www.instagram.com/hablando_contigo_psic/" target="_blank" rel="noopener">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="4"/><circle cx="12" cy="12" r="3"/><line x1="16.5" y1="7.5" x2="16.5" y2="7.501"/></svg>
+            Instagram
+          </a>
+          <a class="info-social-btn" href="https://hablandocontigopsic.com/" target="_blank" rel="noopener">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="3.6" y1="9" x2="20.4" y2="9"/><line x1="3.6" y1="15" x2="20.4" y2="15"/><path d="M11.5 3a17 17 0 0 0 0 18"/><path d="M12.5 3a17 17 0 0 1 0 18"/></svg>
+            Web
+          </a>
+        </div>
+      </div>
+
       <div class="info-footer"></div>
     </div>
 
