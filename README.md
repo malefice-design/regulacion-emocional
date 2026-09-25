@@ -1,4 +1,4 @@
-# Regulación emocional
+# Regulación emocional ❤️‍🩹 
 
 Guía interactiva para identificar lo que sientes y encontrar estrategias para regularte, paso a paso.
 
@@ -15,6 +15,16 @@ Guía interactiva para identificar lo que sientes y encontrar estrategias para r
 ## Sobre el proyecto
 
 Proyecto personal y sin fines de lucro, diseñado por [Magdalena Riquelme](https://malefice.cl).
+
+## Pantallas
+
+| Inicio | Selector de emoción | Resultado |
+|:---:|:---:|:---:|
+| <img src="screenshots/01-inicio.png" width="240" alt="Inicio: ¿con qué necesitas ayuda hoy?"> | <img src="screenshots/02-selector-emocion.png" width="240" alt="Selector de emoción con matices"> | <img src="screenshots/03-resultado.png" width="240" alt="Resultado: técnicas sugeridas para ti"> |
+
+| Estrategias | Cómo aplicarla | Kit SOS |
+|:---:|:---:|:---:|
+| <img src="screenshots/04-estrategias.png" width="240" alt="Lista de estrategias de una categoría"> | <img src="screenshots/05-como-aplicarla.png" width="240" alt="Cómo aplicar una estrategia paso a paso"> | <img src="screenshots/06-kit-sos.png" width="240" alt="Kit SOS con estrategias guardadas"> |
 
 ## Desarrollo local
 
