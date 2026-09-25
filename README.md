@@ -1,8 +1,14 @@
 # Regulación emocional ❤️‍🩹 
+<p align="center">
+  <img width="33%" alt="Banner de Magdalena Riquelme" src="https://github.com/user-attachments/assets/a447889e-0e81-481c-ba18-f50daef6b3eb" />
+</p>
+
 
 Guía interactiva para identificar lo que sientes y encontrar estrategias para regularte, paso a paso.
 
 🔗 [Probar la app](https://malefice-design.github.io/regulacion-emocional/)
+
+<img width="1731" height="909" alt="og_new" src="https://github.com/user-attachments/assets/5c2d6cce-4bbf-4cc6-9180-b586269da32b" />
 
 ## Qué hace
 
